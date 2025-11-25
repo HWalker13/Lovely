@@ -16,12 +16,7 @@
       "supportsTablet": true
     },
 
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/splash.png",
-        "backgroundColor": "#000000"
-      }
-    },
+    "android": {},
 
     "assetBundlePatterns": ["**/*"]
   }
