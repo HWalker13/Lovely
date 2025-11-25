@@ -15,20 +15,30 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }}>
-
-        {/* FIRST screen user sees */}
+        {/* Splash screen is first */}
         <Stack.Screen name="Splash" />
 
-        {/* Main app after splash */}
+        {/* Signup screen after splash */}
+        <Stack.Screen name="Signup" />
+
+        {/* Simple placeholder home */}
+        <Stack.Screen name="first_Screen" />
+
+        {/* Your tab layout */}
         <Stack.Screen name="(tabs)" />
 
-        {/* Modal */}
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-
+        {/* Existing modal */}
+        <Stack.Screen
+          name="modal"
+          options={{ presentation: 'modal', title: 'Modal' }}
+        />
       </Stack>
 
       <StatusBar style="auto" />
     </ThemeProvider>
   );
 }
+
+
+
 

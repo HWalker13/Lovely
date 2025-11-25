@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Image, Animated, StyleSheet } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { View, Animated, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function Splash() {
@@ -10,10 +10,10 @@ export default function Splash() {
     Animated.timing(fade, {
       toValue: 1,
       duration: 800,
-      useNativeDriver: true
+      useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
-        router.replace('/first_Screen');
+        router.replace('Signup');
       }, 600);
     });
   }, []);
@@ -21,7 +21,7 @@ export default function Splash() {
   return (
     <View style={styles.container}>
       <Animated.Image
-        source={require('../assets/images/splash.png')}
+        source={require('../assets/images/flame.png')}
         style={[styles.logo, { opacity: fade }]}
       />
     </View>
@@ -31,13 +31,16 @@ export default function Splash() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000'
   },
   logo: {
-    width: 200,
-    height: 200,
-    resizeMode: 'contain'
-  }
+    width: 170,
+    height: 170,
+    resizeMode: 'contain',
+  },
 });
+
+
+
