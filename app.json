@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "LovelyApp",
+    "slug": "LovelyApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+
+    "ios": {
+      "supportsTablet": true
+    },
+
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/splash.png",
+        "backgroundColor": "#000000"
+      }
+    },
+
+    "assetBundlePatterns": ["**/*"]
+  }
+}
+
+
+
+
+
+    
