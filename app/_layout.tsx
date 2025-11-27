@@ -24,6 +24,9 @@ export default function RootLayout() {
         {/* Simple placeholder home */}
         <Stack.Screen name="first_Screen" />
 
+        {/* Simple Descrober Thingy */}
+        <Stack.Screen name="DescribePartner" />
+
         {/* Your tab layout */}
         <Stack.Screen name="(tabs)" />
 
