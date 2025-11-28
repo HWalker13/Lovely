@@ -29,7 +29,7 @@ export default function Signup() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.replace('index')}
+        onPress={() => router.replace('first_Screen')}
       >
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>

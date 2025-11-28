@@ -1,3 +1,3 @@
-import FirstScreen from "./(tabs)/first_Screen";
+import Splash from "./Splash";
 
-export default FirstScreen;
+export default Splash;
