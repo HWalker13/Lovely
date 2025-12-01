@@ -3,13 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
 
-export default function HomeScreen() {
+export default function FirstScreen() {
   const [bgColor, setBgColor] = useState('#000000');
   const router = useRouter();
 
   const handleYes = () => {
     setBgColor('#4CAF50');
-    router.push('/DescribePartner'); // happy green (you can change the color)
+    router.push('/Homescreen'); // happy green (you can change the color)
   };
 
   const handleNo = () => {
