@@ -1,5 +1,5 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function DescribePartner() {
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function DescribePartner() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.replace('first_Screen')}
+        onPress={() => router.replace('/ContinuePartner')}
       >
         <Text style={styles.buttonText}>Submit (Placeholder)</Text>
       </TouchableOpacity>
