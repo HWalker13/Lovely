@@ -8,7 +8,7 @@ export default function ContinuePartner() {
 
   const handleNext = () => {
     console.log("User wrote:", description);
-    // Later: router.push('/NextPage');
+    router.push('/DescribeFirstDate');
   };
 
   const handleBack = () => {
