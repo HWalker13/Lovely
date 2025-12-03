@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 export default function Splash() {
   const router = useRouter();
+  const { next } = useLocalSearchParams<{ next?: string }>(); // 👈 get param
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -13,10 +14,13 @@ export default function Splash() {
       useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
-        router.replace('Signup');
+        // If we have a "next" route, go there.
+        // Otherwise fall back to Signup like before.
+        const target = typeof next === 'string' && next.length > 0 ? next : 'Signup';
+        router.replace(target);
       }, 600);
     });
-  }, []);
+  }, [fade, next, router]);
 
   return (
     <View style={styles.container}>
@@ -41,6 +45,3 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
-
-
-

@@ -31,7 +31,12 @@ export default function FirstScreen() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.push('/Homescreen')} // KEEP routing to HomeScreen
+        onPress={() =>
+          router.push({
+            pathname: 'Splash',          // go to Splash screen
+            params: { next: 'Homescreen' } // Splash will then route to Homescreen
+          })
+        }
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
