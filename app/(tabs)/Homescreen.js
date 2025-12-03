@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, ScrollView, Animated } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import HomeHeader from '../../components/home/HomeHeader';
 import TodaysGesture from '../../components/home/TodaysGesture';
@@ -199,18 +200,19 @@ const HomeScreen = ({ onNavigateToAsk }) => {
 
     if (isLoading) {
         return (
-            <View style={styles.screenFull}>
+            <SafeAreaView style={styles.screenFull}>
                 <HomeHeader
                     tasksCompleted={tasksCompleted}
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
                 />
-            </View>
+            </SafeAreaView>
         );
     }
 
+
     return (
-        <View style={styles.screenFull}>
+        <SafeAreaView style={styles.screenFull}>
             <HomeHeader
                 tasksCompleted={tasksCompleted}
                 selectedDate={selectedDate}
@@ -256,7 +258,7 @@ const HomeScreen = ({ onNavigateToAsk }) => {
                 {/* Recent Moments Section */}
                 <RecentMoments />
             </ScrollView>
-        </View>
+        </SafeAreaView>
     );
 };
 
