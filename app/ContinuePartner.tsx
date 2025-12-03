@@ -30,11 +30,11 @@ export default function ContinuePartner() {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleNext}>
-          <Text style={styles.buttonText}>Next</Text>
+          <Text style={styles.buttonTextPrimary}>Next</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.buttonSecondary} onPress={handleBack}>
-          <Text style={styles.buttonText}>Back</Text>
+          <Text style={styles.buttonTextSecondary}>Back</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -47,25 +47,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000',
   },
   questionText: {
     fontSize: 20,
     fontWeight: '600',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#fff',              // <-- make question visible
   },
   input: {
     width: '100%',
     minHeight: 120,
-    borderColor: '#ccc',
+    borderColor: '#222',
     borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#222',
     padding: 12,
     fontSize: 16,
     textAlignVertical: 'top',
     marginBottom: 20,
+    color: '#fff',              // <-- typed text visible
   },
   buttonContainer: {
     width: '100%',
@@ -73,21 +75,27 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#ff8c00',
     paddingVertical: 14,
     paddingHorizontal: 40,
     borderRadius: 10,
   },
   buttonSecondary: {
-    backgroundColor: '#000',
+    backgroundColor: '#666',
     paddingVertical: 14,
     paddingHorizontal: 40,
     borderRadius: 10,
   },
-  buttonText: {
-    color: '#FFF',
+  buttonTextPrimary: {
+    color: '#000',              // black on orange looks good
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  buttonTextSecondary: {
+    color: '#fff',              // white on gray
     fontSize: 16,
     fontWeight: '600',
   },
 });
+
 

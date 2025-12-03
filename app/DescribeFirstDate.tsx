@@ -42,7 +42,7 @@ export default function DescribeFirstDate() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     padding: 20,
     justifyContent: 'center'
   },
@@ -51,10 +51,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     fontWeight: '600',
-    color: '#000'
+    color: '#fff'
   },
   input: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#222',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
@@ -63,13 +63,13 @@ const styles = StyleSheet.create({
     color: '#000'
   },
   button: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#ff8c00',
     paddingVertical: 15,
     borderRadius: 10,
     marginTop: 10
   },
   buttonText: {
-    color: '#fff',
+    color: '#000',
     textAlign: 'center',
     fontSize: 18,
     fontWeight: '600'
