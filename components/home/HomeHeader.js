@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+
 
 
 import { getGreeting } from '../../utils/greetingUtils';
@@ -17,6 +19,7 @@ import { COLORS } from '../../constants/colors';
  */
 const HomeHeader = ({ tasksCompleted, selectedDate, onDateSelect }) => {
     const weekDates = getCurrentWeekDates();
+    const router = useRouter();
 
     // Animation for fire icon
     const flameScale = useRef(new Animated.Value(1)).current;
@@ -85,9 +88,12 @@ const HomeHeader = ({ tasksCompleted, selectedDate, onDateSelect }) => {
                 <Text style={styles.greetingText}>{getGreeting()}.</Text>
 
                 {/* Profile Icon */}
-                <View style={styles.profileIcon}>
+                <TouchableOpacity
+                    style={styles.profileIcon}
+                    onPress={() => router.push('Profile')}   // or 'profile' depending on your file name
+                >
                     <Ionicons name="person-circle" size={40} color={COLORS.textPrimary} />
-                </View>
+                </TouchableOpacity>
             </View>
 
             {/* Calendar Row */}
