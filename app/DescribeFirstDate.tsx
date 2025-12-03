@@ -31,7 +31,7 @@ export default function DescribeFirstDate() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.push('/ContinuePartner')}
+        onPress={() => router.push('/first_Screen')}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
