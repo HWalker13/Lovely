@@ -10,6 +10,14 @@
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx"
-  ]
+    "**/*.tsx",
+    "utils/storageUtils.js",
+    "utils/gestureUtils.js",
+    "components/home/UpcomingMoments.js",
+    "components/home/TodaysGesture.js",
+    "components/home/RecentMoments.js",
+    "components/home/LovelyTips.js",
+    "components/home/HomeHeader.js",
+    "components/home/CompletionMessage.js"
+, "app/(tabs)/Homescreen.js"  ]
 }
