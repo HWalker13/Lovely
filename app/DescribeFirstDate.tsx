@@ -1,29 +1,29 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-export default function DescribePartner() {
+export default function DescribeFirstDate() {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Describe Your Partner</Text>
+      <Text style={styles.title}>Describe Your First Date</Text>
 
       <TextInput
-        placeholder="Their personality..."
+        placeholder="What did you do with your partner on your first date?"
         placeholderTextColor="#666"
         style={styles.input}
         multiline
       />
 
       <TextInput
-        placeholder="Favorite things about them..."
+        placeholder="Why that actvity specifcally?"
         placeholderTextColor="#666"
         style={styles.input}
         multiline
       />
 
       <TextInput
-        placeholder="How they make you feel..."
+        placeholder="What moment made you think they're your future partner?"
         placeholderTextColor="#666"
         style={styles.input}
         multiline
@@ -31,9 +31,9 @@ export default function DescribePartner() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.replace('/ContinuePartner')}
+        onPress={() => router.push('/ContinuePartner')}
       >
-        <Text style={styles.buttonText}>Submit (Placeholder)</Text>
+        <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
     </View>
   );
@@ -42,38 +42,36 @@ export default function DescribePartner() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-    paddingHorizontal: 25,
-    paddingTop: 80,
+    backgroundColor: '#fff',
+    padding: 20,
+    justifyContent: 'center'
   },
   title: {
-    fontSize: 28,
-    color: '#fff',
-    fontWeight: '700',
-    marginBottom: 25,
+    fontSize: 24,
     textAlign: 'center',
+    marginBottom: 20,
+    fontWeight: '600',
+    color: '#000'
   },
   input: {
-    backgroundColor: '#111',
-    borderWidth: 1,
-    borderColor: '#222',
-    padding: 14,
-    borderRadius: 10,
-    color: '#fff',
-    marginBottom: 20,
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  button: {
-    backgroundColor: '#ff8c00',
+    backgroundColor: '#f0f0f0',
     padding: 15,
     borderRadius: 10,
-    marginTop: 10,
+    marginBottom: 15,
+    textAlignVertical: 'top',
+    minHeight: 80,
+    color: '#000'
+  },
+  button: {
+    backgroundColor: '#4A90E2',
+    paddingVertical: 15,
+    borderRadius: 10,
+    marginTop: 10
   },
   buttonText: {
-    color: '#000',
-    fontWeight: '700',
-    fontSize: 18,
+    color: '#fff',
     textAlign: 'center',
-  },
+    fontSize: 18,
+    fontWeight: '600'
+  }
 });
