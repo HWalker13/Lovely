@@ -43,7 +43,7 @@ export default function Profile() {
                     <Text style={styles.partnerName}>Partner Name</Text>
 
                     <Text style={styles.metaText}>
-                        Anniversary: June 12, 2021 | Birthday: Feb 3
+                        Anniversary: June 11, 2021 | Birthday: Feb 3
                     </Text>
                 </View>
 
