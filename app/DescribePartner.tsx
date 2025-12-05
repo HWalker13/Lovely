@@ -1,6 +1,9 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+const ORANGE = '#ff8c00';
+const BLACK = '#000';
+
 export default function DescribePartner() {
   const router = useRouter();
 
@@ -10,21 +13,21 @@ export default function DescribePartner() {
 
       <TextInput
         placeholder="Their personality..."
-        placeholderTextColor="#666"
+        placeholderTextColor="#777"
         style={styles.input}
         multiline
       />
 
       <TextInput
         placeholder="Favorite things about them..."
-        placeholderTextColor="#666"
+        placeholderTextColor="#777"
         style={styles.input}
         multiline
       />
 
       <TextInput
         placeholder="How they make you feel..."
-        placeholderTextColor="#666"
+        placeholderTextColor="#777"
         style={styles.input}
         multiline
       />
@@ -33,7 +36,7 @@ export default function DescribePartner() {
         style={styles.button}
         onPress={() => router.replace('/ContinuePartner')}
       >
-        <Text style={styles.buttonText}>Submit (Placeholder)</Text>
+        <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
     </View>
   );
@@ -42,7 +45,7 @@ export default function DescribePartner() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: BLACK,
     paddingHorizontal: 25,
     paddingTop: 80,
   },
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#ff8c00',
+    backgroundColor: ORANGE,
     padding: 15,
     borderRadius: 10,
     marginTop: 10,

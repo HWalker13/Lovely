@@ -1,6 +1,9 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+const ORANGE = '#ff8c00';
+const BLACK = '#000';
+
 export default function FirstScreen() {
   const router = useRouter();
 
@@ -10,21 +13,21 @@ export default function FirstScreen() {
 
       <TextInput
         placeholder="Their favorite foods..."
-        placeholderTextColor="#666"
+        placeholderTextColor="#777"
         style={styles.input}
         multiline
       />
 
       <TextInput
         placeholder="Favorite movies or shows..."
-        placeholderTextColor="#666"
+        placeholderTextColor="#777"
         style={styles.input}
         multiline
       />
 
       <TextInput
         placeholder="Other favorites (music, hobbies, places)..."
-        placeholderTextColor="#666"
+        placeholderTextColor="#777"
         style={styles.input}
         multiline
       />
@@ -33,8 +36,8 @@ export default function FirstScreen() {
         style={styles.button}
         onPress={() =>
           router.push({
-            pathname: 'Splash',          // go to Splash screen
-            params: { next: 'Homescreen' } // Splash will then route to Homescreen
+            pathname: 'Splash',
+            params: { next: 'Homescreen' },
           })
         }
       >
@@ -47,7 +50,7 @@ export default function FirstScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: BLACK,
     paddingHorizontal: 25,
     paddingTop: 80,
   },
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#ff8c00',
+    backgroundColor: ORANGE,
     padding: 15,
     borderRadius: 10,
     marginTop: 10,

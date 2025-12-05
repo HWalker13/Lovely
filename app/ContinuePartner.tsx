@@ -2,12 +2,15 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+const ORANGE = '#ff8c00';
+const BLACK = '#000';
+
 export default function ContinuePartner() {
   const router = useRouter();
   const [description, setDescription] = useState('');
 
   const handleNext = () => {
-    console.log("User wrote:", description);
+    console.log('User wrote:', description);
     router.push('/DescribeFirstDate');
   };
 
@@ -17,7 +20,9 @@ export default function ContinuePartner() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.questionText}>Describe your partner in your own words</Text>
+      <Text style={styles.title}>
+        Describe your partner in your own words
+      </Text>
 
       <TextInput
         style={styles.input}
@@ -28,13 +33,13 @@ export default function ContinuePartner() {
         multiline
       />
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleNext}>
-          <Text style={styles.buttonTextPrimary}>Next</Text>
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={styles.primaryButton} onPress={handleNext}>
+          <Text style={styles.primaryButtonText}>Next</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonSecondary} onPress={handleBack}>
-          <Text style={styles.buttonTextSecondary}>Back</Text>
+        <TouchableOpacity style={styles.secondaryButton} onPress={handleBack}>
+          <Text style={styles.secondaryButtonText}>Back</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -44,17 +49,16 @@ export default function ContinuePartner() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#000',
+    backgroundColor: BLACK,
+    paddingHorizontal: 25,
+    paddingTop: 80,
   },
-  questionText: {
-    fontSize: 20,
-    fontWeight: '600',
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
     marginBottom: 20,
     textAlign: 'center',
-    color: '#fff',              // <-- make question visible
+    color: '#fff',
   },
   input: {
     width: '100%',
@@ -62,40 +66,39 @@ const styles = StyleSheet.create({
     borderColor: '#222',
     borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: '#222',
-    padding: 12,
+    backgroundColor: '#111',
+    padding: 14,
     fontSize: 16,
     textAlignVertical: 'top',
-    marginBottom: 20,
-    color: '#fff',              // <-- typed text visible
+    marginBottom: 24,
+    color: '#fff',
   },
-  buttonContainer: {
-    width: '100%',
-    alignItems: 'center',
-    gap: 20,
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 12,
   },
-  button: {
-    backgroundColor: '#ff8c00',
+  primaryButton: {
+    flex: 1,
+    backgroundColor: ORANGE,
     paddingVertical: 14,
-    paddingHorizontal: 40,
     borderRadius: 10,
   },
-  buttonSecondary: {
-    backgroundColor: '#666',
+  secondaryButton: {
+    flex: 1,
+    backgroundColor: '#444',
     paddingVertical: 14,
-    paddingHorizontal: 40,
     borderRadius: 10,
   },
-  buttonTextPrimary: {
-    color: '#000',              // black on orange looks good
+  primaryButtonText: {
+    color: '#000',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
+    textAlign: 'center',
   },
-  buttonTextSecondary: {
-    color: '#fff',              // white on gray
+  secondaryButtonText: {
+    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+    textAlign: 'center',
   },
 });
-
-

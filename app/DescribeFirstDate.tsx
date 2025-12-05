@@ -1,6 +1,9 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+const ORANGE = '#ff8c00';
+const BLACK = '#000';
+
 export default function DescribeFirstDate() {
   const router = useRouter();
 
@@ -10,21 +13,21 @@ export default function DescribeFirstDate() {
 
       <TextInput
         placeholder="What did you do with your partner on your first date?"
-        placeholderTextColor="#666"
+        placeholderTextColor="#777"
         style={styles.input}
         multiline
       />
 
       <TextInput
-        placeholder="Why that actvity specifcally?"
-        placeholderTextColor="#666"
+        placeholder="Why that activity specifically?"
+        placeholderTextColor="#777"
         style={styles.input}
         multiline
       />
 
       <TextInput
         placeholder="What moment made you think they're your future partner?"
-        placeholderTextColor="#666"
+        placeholderTextColor="#777"
         style={styles.input}
         multiline
       />
@@ -42,36 +45,38 @@ export default function DescribeFirstDate() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-    padding: 20,
-    justifyContent: 'center'
+    backgroundColor: BLACK,
+    paddingHorizontal: 25,
+    paddingTop: 80,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     textAlign: 'center',
-    marginBottom: 20,
-    fontWeight: '600',
-    color: '#fff'
+    marginBottom: 25,
+    fontWeight: '700',
+    color: '#fff',
   },
   input: {
-    backgroundColor: '#222',
-    padding: 15,
+    backgroundColor: '#111',
+    borderWidth: 1,
+    borderColor: '#222',
+    padding: 14,
     borderRadius: 10,
-    marginBottom: 15,
+    marginBottom: 20,
     textAlignVertical: 'top',
     minHeight: 80,
-    color: '#000'
+    color: '#fff',
   },
   button: {
-    backgroundColor: '#ff8c00',
+    backgroundColor: ORANGE,
     paddingVertical: 15,
     borderRadius: 10,
-    marginTop: 10
+    marginTop: 10,
   },
   buttonText: {
     color: '#000',
     textAlign: 'center',
     fontSize: 18,
-    fontWeight: '600'
-  }
+    fontWeight: '700',
+  },
 });

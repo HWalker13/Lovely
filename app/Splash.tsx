@@ -16,7 +16,7 @@ export default function Splash() {
       setTimeout(() => {
         // If we have a "next" route, go there.
         // Otherwise fall back to Signup like before.
-        const target = typeof next === 'string' && next.length > 0 ? next : 'Signup';
+        const target = typeof next === 'string' && next.length > 0 ? next : 'Onboarding';
         router.replace(target);
       }, 600);
     });
