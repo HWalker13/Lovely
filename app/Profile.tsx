@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    ScrollView,
-    TouchableOpacity,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import {
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Profile() {
     const router = useRouter();
@@ -26,13 +26,13 @@ export default function Profile() {
                         style={styles.iconButton}
                         onPress={() => router.push('Homescreen')}
                     >
-                        <Ionicons name="chevron-back" size={22} color="#ffffff" />
+                        <Ionicons name="chevron-back" size={22} color="#ff8c00" />
                     </TouchableOpacity>
 
                     <Text style={styles.screenTitle}>Profile</Text>
 
                     <TouchableOpacity style={styles.iconButton} onPress={() => { }}>
-                        <Ionicons name="settings-outline" size={22} color="#ffffff" />
+                        <Ionicons name="settings-outline" size={22} color="#ff8c00" />
                     </TouchableOpacity>
                 </View>
 
@@ -143,7 +143,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#111111', // dark gradient-ish base
+        backgroundColor: '#000000', // dark gradient-ish base
     },
     container: {
         paddingHorizontal: 24,
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     },
     fieldLabel: {
         fontSize: 13,
-        color: 'rgba(255,255,255,0.6)',
+        color: 'rgba(255, 140, 0, 1)',
     },
     fieldLabelSpacing: {
         marginTop: 10,
