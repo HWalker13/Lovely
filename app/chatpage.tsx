@@ -18,7 +18,6 @@ export default function ChatPage() {
 
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState('');
-  const [sparks, setSparks] = useState<{ id: number; x: number; y: number }[]>([]);
 
   /* INTRO MESSAGE ANIMATION */
   const [showIntro, setShowIntro] = useState(true);
@@ -38,15 +37,14 @@ export default function ChatPage() {
   const glowOpacity = useRef(new Animated.Value(0)).current;
 
   /* AUTO-SCROLL */
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollView>(null);
 
   const sendMessage = () => {
     if (input.trim().length === 0) return;
 
-    /* Fade intro out on first message */
+    // Remove intro
     if (showIntro) {
       setShowIntro(false);
-
       Animated.timing(introOpacity, {
         toValue: 0,
         duration: 350,
@@ -54,48 +52,31 @@ export default function ChatPage() {
       }).start();
     }
 
-    /* Flame pulse */
+    // Flame pulse
     Animated.sequence([
-      Animated.timing(flameScale, { toValue: 1.3, duration: 100, useNativeDriver: true }),
+      Animated.timing(flameScale, { toValue: 1.3, duration: 110, useNativeDriver: true }),
       Animated.timing(flameScale, { toValue: 1, duration: 120, useNativeDriver: true }),
     ]).start();
 
-    /* Glow burst */
+    // Glow flash
     glowOpacity.setValue(0);
     Animated.sequence([
       Animated.timing(glowOpacity, { toValue: 0.8, duration: 120, useNativeDriver: true }),
       Animated.timing(glowOpacity, { toValue: 0, duration: 250, useNativeDriver: true }),
     ]).start();
 
-    /* Sparks */
-    spawnSparks();
-
-    /* Add message */
-    setMessages([...messages, input]);
+    // Add the message
+    setMessages((prev) => [...prev, input]);
     setInput('');
 
-    /* Auto-scroll */
+    // Auto-scroll
     setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, 60);
-  };
-
-  const spawnSparks = () => {
-    const newSparks: any[] = [];
-    for (let i = 0; i < 5; i++) {
-      newSparks.push({
-        id: Date.now() + i,
-        x: Math.random() * 40 - 20,
-        y: Math.random() * -40 - 10,
-      });
-    }
-    setSparks(newSparks);
-    setTimeout(() => setSparks([]), 350);
+      scrollRef.current?.scrollToEnd({ animated: true });
+    }, 80);
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
+    <KeyboardAvoidingView style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {/* Back button */}
@@ -103,7 +84,7 @@ export default function ChatPage() {
         <Text style={styles.arrow}>‹</Text>
       </TouchableOpacity>
 
-      {/* Intro message centered */}
+      {/* Intro message */}
       {showIntro && (
         <Animated.View style={[styles.introContainer, { opacity: introOpacity }]}>
           <Text style={styles.introText}>
@@ -113,80 +94,79 @@ export default function ChatPage() {
         </Animated.View>
       )}
 
-      {/* Chat messages */}
+      {/* Messages */}
       <ScrollView
         style={styles.messagesContainer}
-        ref={scrollViewRef}
-        onContentSizeChange={() =>
-          scrollViewRef.current?.scrollToEnd({ animated: true })
-        }
+        ref={scrollRef}
+        onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
       >
-        {messages.map((msg, index) => (
-          <View key={index} style={styles.messageBubble}>
-            <Text style={styles.messageText}>{msg}</Text>
+        {messages.map((m, i) => (
+          <View key={i} style={styles.messageBubble}>
+            <Text style={styles.messageText}>{m}</Text>
           </View>
         ))}
       </ScrollView>
 
-      {/* Input bar */}
+      {/* Input row */}
       <View style={styles.inputRow}>
         <TextInput
           placeholder="Write something..."
-          placeholderTextColor="#888"
+          placeholderTextColor="#999"
           value={input}
           onChangeText={setInput}
           style={styles.input}
         />
 
         <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-          {/* Glow */}
+          {/* Glow flash */}
           <Animated.View style={[styles.glow, { opacity: glowOpacity }]} />
-
-          {/* Sparks */}
-          {sparks.map((spark) => (
-            <Animated.View
-              key={spark.id}
-              style={[
-                styles.spark,
-                {
-                  transform: [
-                    { translateX: spark.x },
-                    { translateY: spark.y },
-                  ],
-                },
-              ]}
-            />
-          ))}
 
           {/* Flame */}
           <Animated.View style={{ transform: [{ scale: flameScale }] }}>
-            <Image
-              source={require('../assets/images/flame.png')}
-              style={styles.sendFlame}
-              resizeMode="contain"
-            />
+            <View style={styles.flameWrapper}>
+              <Image
+                source={require('../assets/images/flame.png')}
+                style={styles.flameImg}
+                resizeMode="contain"
+              />
+            </View>
           </Animated.View>
 
         </TouchableOpacity>
       </View>
+
     </KeyboardAvoidingView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'black', paddingTop: 55 },
+/* ----------------------------- STYLES ---------------------------- */
 
-  backButton: { paddingLeft: 15, marginBottom: 5 },
-  arrow: { color: 'white', fontSize: 38, fontWeight: '200' },
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+    paddingTop: 55,
+  },
+
+  backButton: {
+    paddingLeft: 15,
+    marginBottom: 5,
+  },
+
+  arrow: {
+    color: 'white',
+    fontSize: 38,
+    fontWeight: '200',
+  },
 
   /* INTRO MESSAGE */
   introContainer: {
     position: 'absolute',
     top: '40%',
     width: '100%',
-    zIndex: 20,
     alignItems: 'center',
     paddingHorizontal: 20,
+    zIndex: 50,
   },
 
   introText: {
@@ -194,8 +174,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '300',
     textAlign: 'center',
-    opacity: 0.92,
     lineHeight: 28,
+    opacity: 0.92,
   },
 
   messagesContainer: {
@@ -207,14 +187,17 @@ const styles = StyleSheet.create({
   messageBubble: {
     backgroundColor: '#3a3a3a',
     padding: 12,
-    borderRadius: 14,
     marginBottom: 12,
+    borderRadius: 14,
     alignSelf: 'flex-end',
-    maxWidth: '80%',
     borderBottomRightRadius: 4,
+    maxWidth: '80%',
   },
 
-  messageText: { color: 'white', fontSize: 16 },
+  messageText: {
+    color: 'white',
+    fontSize: 16,
+  },
 
   inputRow: {
     flexDirection: 'row',
@@ -227,43 +210,49 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 42,
-    borderRadius: 20,
-    paddingHorizontal: 15,
     backgroundColor: '#222',
     color: 'white',
+    paddingHorizontal: 15,
+    borderRadius: 20,
   },
 
   sendButton: {
     marginLeft: 10,
-    backgroundColor: '#1c1c1c4d',
     width: 50,
     height: 50,
     borderRadius: 45,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#1c1c1c4d',
     borderWidth: 1,
     borderColor: '#333',
     overflow: 'hidden',
   },
 
-  sendFlame: { width: 38, height: 38 },
+  flameWrapper: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  flameImg: {
+    width: '100%',
+    height: '100%',
+  },
 
   glow: {
     position: 'absolute',
     width: 70,
     height: 70,
-    borderRadius: 35,
+    borderRadius: 40,
     backgroundColor: 'rgba(255,150,0,0.45)',
   },
-
-  spark: {
-    position: 'absolute',
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: 'orange',
-  },
 });
+
+
 
 
 
