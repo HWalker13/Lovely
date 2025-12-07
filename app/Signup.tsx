@@ -1,85 +1,134 @@
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { auth } from "../firebaseConfig";
 
 export default function Signup() {
   const router = useRouter();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
+
+  const onSignup = async () => {
+    if (password !== confirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, email.trim(), password);
+
+      // NEW FLOW:
+      // Signup → Splash → DescribePartner
+      router.replace("/Splash?next=/DescribePartner");
+
+    } catch (err: any) {
+      setError(err.message || "Signup failed.");
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {/* Logo on top */}
-      <Image
-        source={require('../assets/images/flame.png')}
-        style={styles.logo}
-      />
+      <Text style={styles.title}>create your account.</Text>
 
-      <Text style={styles.title}>Create Account</Text>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <TextInput
+        style={styles.input}
         placeholder="Email"
-        placeholderTextColor="#777"
-        style={styles.input}
+        placeholderTextColor="#999"
+        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
       />
 
       <TextInput
-        placeholder="Password"
-        placeholderTextColor="#777"
-        secureTextEntry
         style={styles.input}
+        placeholder="Password"
+        placeholderTextColor="#999"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
       />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.replace('DescribePartner')}
-      >
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        placeholderTextColor="#999"
+        secureTextEntry
+        value={confirm}
+        onChangeText={setConfirm}
+      />
+
+      <TouchableOpacity style={styles.button} onPress={onSignup}>
         <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.push("/Login")}>
+        <Text style={styles.link}>Already have an account? Log in</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
+const ORANGE = "#FF8C00";
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 28,
-  },
-  logo: {
-    width: 150,
-    height: 150,
-    resizeMode: 'contain',
-    marginBottom: 25,
+    backgroundColor: "black",
+    justifyContent: "center",
+    paddingHorizontal: 24,
   },
   title: {
+    color: "white",
     fontSize: 28,
-    color: '#fff',
-    fontWeight: '700',
-    marginBottom: 25,
+    marginBottom: 24,
+    fontWeight: "600",
   },
   input: {
-    backgroundColor: '#111',
-    borderWidth: 1,
-    borderColor: '#222',
+    width: "100%",
+    backgroundColor: "#1A1A1A",
     padding: 14,
     borderRadius: 10,
-    color: '#fff',
-    width: '100%',
-    marginBottom: 15,
+    marginBottom: 14,
+    color: "white",
+    borderWidth: 1,
+    borderColor: "#333",
   },
   button: {
-    backgroundColor: '#ff8c00',
-    padding: 15,
+    backgroundColor: ORANGE,
+    paddingVertical: 14,
     borderRadius: 10,
-    width: '100%',
     marginTop: 10,
   },
   buttonText: {
-    color: '#000',
-    fontWeight: '700',
-    fontSize: 18,
-    textAlign: 'center',
+    color: "black",
+    textAlign: "center",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  link: {
+    color: ORANGE,
+    marginTop: 18,
+    textAlign: "center",
+    fontSize: 14,
+  },
+  error: {
+    color: "#ff8c00",
+    marginBottom: 10,
   },
 });
+
+
 
 

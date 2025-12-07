@@ -1,26 +1,41 @@
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { Animated, StyleSheet, View } from 'react-native';
+import { auth } from '../firebaseConfig';
 
 export default function Splash() {
   const router = useRouter();
-  const { next } = useLocalSearchParams<{ next?: string }>(); // 👈 get param
+  const { next } = useLocalSearchParams<{ next?: string }>();
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    // Fade-in animation
     Animated.timing(fade, {
       toValue: 1,
       duration: 800,
       useNativeDriver: true,
-    }).start(() => {
+    }).start();
+
+    // Auth state check
+    const unsub = onAuthStateChanged(auth, (user) => {
       setTimeout(() => {
-        // If we have a "next" route, go there.
-        // Otherwise fall back to Signup like before.
-        const target = typeof next === 'string' && next.length > 0 ? next : 'Onboarding';
-        router.replace(target);
-      }, 600);
+        // If a "next" param was passed, ALWAYS follow it
+        if (next) {
+          router.replace(next);
+          return;
+        }
+
+        if (user) {
+          router.replace('/(tabs)/Homescreen');
+        } else {
+          router.replace('/Onboarding');
+        }
+      }, 800);
     });
-  }, [fade, next, router]);
+
+    return unsub;
+  }, [next]);
 
   return (
     <View style={styles.container}>
@@ -45,3 +60,5 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
+
+
