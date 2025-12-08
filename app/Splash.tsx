@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
@@ -6,31 +6,36 @@ import { auth } from '../firebaseConfig';
 
 export default function Splash() {
   const router = useRouter();
+  const { next } = useLocalSearchParams<{ next?: string }>();
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Fade animation
     Animated.timing(fade, {
       toValue: 1,
-      duration: 800,
+      duration: 700,
       useNativeDriver: true,
     }).start();
 
-    // Watch auth state
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsub = onAuthStateChanged(auth, user => {
       setTimeout(() => {
+
+        // 1. If a next param exists → ALWAYS obey it
+        if (next && next.length > 0) {
+          router.replace(String(next));
+          return;
+        }
+
+        // 2. No next param? Follow normal logic
         if (user) {
-          // Logged in → home
           router.replace('/(tabs)/Homescreen');
         } else {
-          // Logged out → LOGIN (NOT onboarding)
-          router.replace('/Login');
+          router.replace('/Onboarding');
         }
-      }, 800);
+      }, 700);
     });
 
     return unsub;
-  }, []);
+  }, [next]);
 
   return (
     <View style={styles.container}>
@@ -55,5 +60,10 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
+
+
+
+
+
 
 

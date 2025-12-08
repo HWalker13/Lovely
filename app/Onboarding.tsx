@@ -1,9 +1,19 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+// IMPORTANT — correct AsyncStorage import for Expo Router projects
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Onboarding() {
   const router = useRouter();
+
+  useEffect(() => {
+    // Mark onboarding as seen immediately
+    AsyncStorage.setItem('seenOnboarding', 'true').catch(() => {
+      console.warn('Could not save onboarding flag.');
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -98,4 +108,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
+
 

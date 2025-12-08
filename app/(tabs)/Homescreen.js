@@ -189,7 +189,7 @@ const HomeScreen = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.replace('/Login');
+      router.replace("/Splash?fromLogout=1");
     } catch (error) {
       console.error('Error logging out:', error);
     }

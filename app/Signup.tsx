@@ -3,12 +3,12 @@ import { useRouter } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from "react-native";
 import { auth /*, db*/ } from "../firebaseConfig";
 // If you want Firestore user docs later, uncomment:
