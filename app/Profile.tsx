@@ -10,9 +10,21 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+
 export default function Profile() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<'overview' | 'library'>('library');
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            router.replace('/Splash');
+        } catch (err) {
+            console.log('Logout error:', err);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -20,7 +32,7 @@ export default function Profile() {
                 contentContainerStyle={styles.container}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Top bar: back, title, settings */}
+                {/* Top bar */}
                 <View style={styles.topBar}>
                     <TouchableOpacity
                         style={styles.iconButton}
@@ -31,12 +43,12 @@ export default function Profile() {
 
                     <Text style={styles.screenTitle}>Profile</Text>
 
-                    <TouchableOpacity style={styles.iconButton} onPress={() => { }}>
+                    <TouchableOpacity style={styles.iconButton}>
                         <Ionicons name="settings-outline" size={22} color="#ff8c00" />
                     </TouchableOpacity>
                 </View>
 
-                {/* Avatar + name + dates */}
+                {/* Avatar */}
                 <View style={styles.headerSection}>
                     <View style={styles.avatarCircle} />
 
@@ -47,7 +59,7 @@ export default function Profile() {
                     </Text>
                 </View>
 
-                {/* Segmented control */}
+                {/* Tabs */}
                 <View style={styles.segmentRow}>
                     <TouchableOpacity
                         style={[
@@ -133,7 +145,11 @@ export default function Profile() {
                     </View>
                 </View>
 
-                {/* Spacer at bottom so content isn't tight to tab bar */}
+                {/* ✔ THE INTENDED ORANGE LOGOUT BUTTON */}
+                <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                    <Text style={styles.logoutButtonText}>Log Out</Text>
+                </TouchableOpacity>
+
                 <View style={{ height: 40 }} />
             </ScrollView>
         </SafeAreaView>
@@ -143,7 +159,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#000000', // dark gradient-ish base
+        backgroundColor: '#000000',
     },
     container: {
         paddingHorizontal: 24,
@@ -248,7 +264,7 @@ const styles = StyleSheet.create({
     },
     fieldLabel: {
         fontSize: 13,
-        color: 'rgba(255, 140, 0, 1)',
+        color: 'rgba(255,140,0,1)',
     },
     fieldLabelSpacing: {
         marginTop: 10,
@@ -258,4 +274,21 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontWeight: '600',
     },
+
+    /* ✔ INTENDED ORANGE LOGOUT BUTTON */
+    logoutButton: {
+        backgroundColor: '#ff8c00',
+        paddingVertical: 14,
+        borderRadius: 14,
+        marginTop: 28,
+        alignItems: 'center',
+    },
+    logoutButtonText: {
+        color: '#000',
+        fontSize: 16,
+        fontWeight: '700',
+    },
 });
+
+
+

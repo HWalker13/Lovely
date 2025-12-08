@@ -1,15 +1,15 @@
 // app/ForgotPassword.tsx
+import { useRouter } from 'expo-router';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import React, { useState } from 'react';
 import {
-    View,
+    ActivityIndicator,
+    StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
-    ActivityIndicator,
+    View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
 export default function ForgotPassword() {
@@ -49,7 +49,7 @@ export default function ForgotPassword() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Reset Password</Text>
+            <Text style={styles.title}>reset password.</Text>
 
             <TextInput
                 placeholder="Email"
@@ -92,10 +92,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 28,
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         color: '#fff',
         fontWeight: '700',
         marginBottom: 20,
+        textTransform: 'lowercase',
     },
     input: {
         backgroundColor: '#111',
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#ff8c00',
-        padding: 15,
+        paddingVertical: 14, // matched to Login/Signup
         borderRadius: 10,
         width: '100%',
         marginTop: 10,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#000',
         fontWeight: '700',
-        fontSize: 18,
+        fontSize: 16, // matching all other buttons
         textAlign: 'center',
     },
     errorText: {
@@ -133,5 +134,7 @@ const styles = StyleSheet.create({
     linkText: {
         color: '#ff8c00',
         marginTop: 16,
+        fontSize: 14,
     },
 });
+

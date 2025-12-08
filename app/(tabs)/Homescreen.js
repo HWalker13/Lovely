@@ -7,8 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  View,
-  Text,
+  View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -186,10 +185,10 @@ const HomeScreen = () => {
     router.push('/chatpage');
   };
 
+  // Keep handleLogout function in case Profile screen needs it
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      // AuthProvider will set user to null and _layout will show Login/Signup
       router.replace('/Login');
     } catch (error) {
       console.error('Error logging out:', error);
@@ -216,12 +215,7 @@ const HomeScreen = () => {
         onDateSelect={setSelectedDate}
       />
 
-      {/* Simple logout button */}
-      <View style={styles.logoutContainer}>
-        <TouchableOpacity onPress={handleLogout}>
-          <Text style={styles.logoutText}>Log out</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Removed the logout button completely */}
 
       <ScrollView
         style={styles.scrollContent}
@@ -250,9 +244,9 @@ const HomeScreen = () => {
 
         <UpcomingMoments
           moments={upcomingMoments}
-          onDetails={() => { }}
-          onEdit={() => { }}
-          onMenu={() => { }}
+          onDetails={() => {}}
+          onEdit={() => {}}
+          onMenu={() => {}}
         />
         <LovelyTips />
         <RecentMoments />
@@ -282,17 +276,6 @@ const styles = StyleSheet.create({
   scrollContent: { flex: 1 },
   contentContainer: { flexGrow: 1 },
 
-  logoutContainer: {
-    alignItems: 'flex-end',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-  },
-  logoutText: {
-    color: ORANGE,
-    fontSize: 14,
-    fontWeight: '500',
-  },
-
   flameContainer: {
     position: 'absolute',
     bottom: 40,
@@ -315,3 +298,4 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
