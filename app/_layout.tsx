@@ -35,13 +35,11 @@ function RootNavigator() {
         <>
           <Stack.Screen name="Login" />
           <Stack.Screen name="Signup" />
+          <Stack.Screen name="ForgotPassword" />
         </>
       ) : (
         <>
-          {/* Logged-in entry point (Splash → Home flow) */}
           <Stack.Screen name="index" />
-
-          {/* DescribePartner is still available after signup */}
           <Stack.Screen name="DescribePartner" />
         </>
       )}

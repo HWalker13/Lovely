@@ -2,10 +2,12 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
+import { useAuth } from '../AuthProvider';
 
 export default function Splash() {
   const router = useRouter();
   const { next } = useLocalSearchParams<{ next?: string }>();
+  const { user } = useAuth();
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -17,18 +19,24 @@ export default function Splash() {
     }).start();
 
     const timer = setTimeout(() => {
-      // If a "next" param was passed, ALWAYS follow it
+      // 1) If a "next" param is passed (e.g. from Signup), always respect it
       if (next) {
-        router.replace(next);
+        router.replace(String(next));
         return;
       }
 
-      // Otherwise, go to the real home screen for logged-in users
-      router.replace('/(tabs)/Homescreen'); // or '/(tabs)/HomeScreen' if that's the exact route name
+      // 2) Otherwise, route based on auth state:
+      //    - Logged in  -> go to Homescreen
+      //    - Not logged -> go to Login
+      if (user) {
+        router.replace('/(tabs)/Homescreen'); // or /HomeScreen if that's the exact route
+      } else {
+        router.replace('/Login');
+      }
     }, 800);
 
     return () => clearTimeout(timer);
-  }, [next, router, fade]);
+  }, [next, router, fade, user]);
 
   return (
     <View style={styles.container}>
