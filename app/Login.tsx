@@ -1,12 +1,14 @@
+// app/Login.tsx
 import { useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
 } from "react-native";
 import { auth } from "../firebaseConfig";
 
@@ -16,13 +18,37 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onLogin = async () => {
+    setError("");
+
+    if (!email.trim() || !password.trim()) {
+      setError("Please enter both email and password.");
+      return;
+    }
+
     try {
+      setLoading(true);
+
       await signInWithEmailAndPassword(auth, email.trim(), password);
-      router.replace("/Splash?next=/(tabs)/Homescreen"); // adjust route as needed
-    } catch (err) {
-      setError("Invalid email or password.");
+
+      // Login → Splash → Homescreen for returning users
+      router.replace("/Splash?next=/(tabs)/Homescreen");
+    } catch (err: any) {
+      console.log("Login error:", err);
+      if (
+        err.code === "auth/user-not-found" ||
+        err.code === "auth/wrong-password"
+      ) {
+        setError("Invalid email or password.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("Please enter a valid email address.");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,12 +77,24 @@ export default function Login() {
         onChangeText={setPassword}
       />
 
-      <TouchableOpacity style={styles.button} onPress={onLogin}>
-        <Text style={styles.buttonText}>Log in</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onLogin}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="black" />
+        ) : (
+          <Text style={styles.buttonText}>Log in</Text>
+        )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("/Signup")}>
         <Text style={styles.link}>Don’t have an account? Sign up</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.push("/ForgotPassword")}>
+        <Text style={styles.link}>Forgot your password?</Text>
       </TouchableOpacity>
     </View>
   );
@@ -110,4 +148,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-

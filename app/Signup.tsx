@@ -1,3 +1,4 @@
+// app/Signup.tsx
 import { useRouter } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
@@ -7,8 +8,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from "react-native";
-import { auth } from "../firebaseConfig";
+import { auth /*, db*/ } from "../firebaseConfig";
+// If you want Firestore user docs later, uncomment:
+// import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 export default function Signup() {
   const router = useRouter();
@@ -17,22 +21,54 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onSignup = async () => {
+    setError("");
+
+    if (!email.trim() || !password.trim() || !confirm.trim()) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
     if (password !== confirm) {
       setError("Passwords do not match.");
       return;
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email.trim(), password);
+      setLoading(true);
 
-      // NEW FLOW:
-      // Signup → Splash → DescribePartner
+      const cred = await createUserWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
+
+      // If you want a Firestore user profile doc, uncomment:
+      /*
+      const user = cred.user;
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        createdAt: serverTimestamp(),
+      });
+      */
+
+      // Signup → Splash → DescribePartner (shown once after signup)
       router.replace("/Splash?next=/DescribePartner");
-
     } catch (err: any) {
-      setError(err.message || "Signup failed.");
+      console.log("Signup error:", err);
+      if (err.code === "auth/email-already-in-use") {
+        setError("That email is already in use.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("Please enter a valid email address.");
+      } else if (err.code === "auth/weak-password") {
+        setError("Password should be at least 6 characters.");
+      } else {
+        setError(err.message || "Signup failed.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,8 +105,16 @@ export default function Signup() {
         onChangeText={setConfirm}
       />
 
-      <TouchableOpacity style={styles.button} onPress={onSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onSignup}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="black" />
+        ) : (
+          <Text style={styles.buttonText}>Sign Up</Text>
+        )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("/Login")}>
@@ -128,7 +172,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-
-
-

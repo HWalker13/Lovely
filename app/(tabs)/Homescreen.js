@@ -1,6 +1,15 @@
+// app/(tabs)/Homescreen.js
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Animated,
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CompletionMessage from '../../components/home/CompletionMessage';
@@ -19,6 +28,9 @@ import {
   saveDailyCompletion,
   saveStreak,
 } from '../../utils/storageUtils';
+
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebaseConfig';
 
 const HomeScreen = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
@@ -170,9 +182,18 @@ const HomeScreen = () => {
     }
   };
 
-  // CLEAN — no more props, always routes to chatpage
   const handlePlanPress = () => {
     router.push('/chatpage');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // AuthProvider will set user to null and _layout will show Login/Signup
+      router.replace('/Login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   if (isLoading) {
@@ -195,6 +216,13 @@ const HomeScreen = () => {
         onDateSelect={setSelectedDate}
       />
 
+      {/* Simple logout button */}
+      <View style={styles.logoutContainer}>
+        <TouchableOpacity onPress={handleLogout}>
+          <Text style={styles.logoutText}>Log out</Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView
         style={styles.scrollContent}
         contentContainerStyle={styles.contentContainer}
@@ -204,7 +232,7 @@ const HomeScreen = () => {
           <Animated.View style={{ opacity: gestureOpacity }}>
             <TodaysGesture
               gesture={todaysGesture}
-              onPlanPress={handlePlanPress}   // CLEAN
+              onPlanPress={handlePlanPress}
               onMarkDone={handleMarkDone}
             />
           </Animated.View>
@@ -220,7 +248,12 @@ const HomeScreen = () => {
           </Animated.View>
         )}
 
-        <UpcomingMoments moments={upcomingMoments} onDetails={() => {}} onEdit={() => {}} onMenu={() => {}} />
+        <UpcomingMoments
+          moments={upcomingMoments}
+          onDetails={() => { }}
+          onEdit={() => { }}
+          onMenu={() => { }}
+        />
         <LovelyTips />
         <RecentMoments />
       </ScrollView>
@@ -242,10 +275,23 @@ const HomeScreen = () => {
   );
 };
 
+const ORANGE = '#FF8C00';
+
 const styles = StyleSheet.create({
   screenFull: { flex: 1, width: '100%' },
   scrollContent: { flex: 1 },
   contentContainer: { flexGrow: 1 },
+
+  logoutContainer: {
+    alignItems: 'flex-end',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  logoutText: {
+    color: ORANGE,
+    fontSize: 14,
+    fontWeight: '500',
+  },
 
   flameContainer: {
     position: 'absolute',
