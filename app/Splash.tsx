@@ -1,8 +1,7 @@
+// app/Splash.tsx
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { auth } from '../firebaseConfig';
 
 export default function Splash() {
   const router = useRouter();
@@ -17,25 +16,19 @@ export default function Splash() {
       useNativeDriver: true,
     }).start();
 
-    // Auth state check
-    const unsub = onAuthStateChanged(auth, (user) => {
-      setTimeout(() => {
-        // If a "next" param was passed, ALWAYS follow it
-        if (next) {
-          router.replace(next);
-          return;
-        }
+    const timer = setTimeout(() => {
+      // If a "next" param was passed, ALWAYS follow it
+      if (next) {
+        router.replace(next);
+        return;
+      }
 
-        if (user) {
-          router.replace('/(tabs)/Homescreen');
-        } else {
-          router.replace('/Onboarding');
-        }
-      }, 800);
-    });
+      // Otherwise, go to the real home screen for logged-in users
+      router.replace('/(tabs)/Homescreen'); // or '/(tabs)/HomeScreen' if that's the exact route name
+    }, 800);
 
-    return unsub;
-  }, [next]);
+    return () => clearTimeout(timer);
+  }, [next, router, fade]);
 
   return (
     <View style={styles.container}>
@@ -60,5 +53,3 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
-
-
