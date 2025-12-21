@@ -9,6 +9,8 @@ from app.models.partner_profile import PartnerProfileV1
 from app.models.nudge import Nudgev1
 from fastapi import Depends
 from uuid import uuid4
+from app.repositories.firestore import get_db
+
 
 
 app = FastAPI()
@@ -48,6 +50,8 @@ def create_nudge(
     nudge: Nudgev1,
     uid: str = Depends(get_current_user_uid),
 ):
+    db = get_db()
+
     nudge_id = str(uuid4())
     nudge_dict = nudge.dict()
     nudge_dict.update({
@@ -55,13 +59,18 @@ def create_nudge(
         "user_uid": uid,
     })
 
-    db.collection("users").document(uid).collection("nudges").document(nudge_id).set(nudge_dict)
+    db.collection("users") \
+      .document(uid) \
+      .collection("nudges") \
+      .document(nudge_id) \
+      .set(nudge_dict)
+
     return {"id": nudge_id}
 
 @app.get("/nudges")
-def list_nudges(
-    uid: str = Depends(get_current_user_uid),
-):
+def list_nudges(uid: str = Depends(get_current_user_uid)):
+    db = get_db()
+
     docs = (
         db.collection("users")
         .document(uid)
@@ -71,3 +80,4 @@ def list_nudges(
     )
 
     return [doc.to_dict() for doc in docs]
+
