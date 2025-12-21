@@ -1,9 +1,9 @@
 // app/_layout.tsx
-import React from "react";
+import { registerForPushNotificationsAsync } from "@/lib/notifications";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
-import { useColorScheme, View, ActivityIndicator } from "react-native";
-
+import React, { useEffect } from "react";
+import { ActivityIndicator, useColorScheme, View } from "react-native";
 import { AuthProvider, useAuth } from "../AuthProvider";
 
 export default function RootLayout() {
@@ -20,6 +20,16 @@ export default function RootLayout() {
 
 function RootNavigator() {
   const { user, loading } = useAuth();
+
+  useEffect(() => {
+  const setupNotifications = async () => {
+    const token = await registerForPushNotificationsAsync();
+    console.log("Expo push token:", token);
+  };
+
+  setupNotifications();
+}, []);
+
 
   if (loading) {
     return (

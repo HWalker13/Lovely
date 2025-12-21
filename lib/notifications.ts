@@ -13,10 +13,10 @@ Notifications.setNotificationHandler({
   }),
 });
 
-
-export async function registerForPushNotificationsAsync() {
+export async function registerForPushNotificationsAsync(): Promise<string | null> {
   if (!Device.isDevice) {
-    throw new Error("Push notifications require a physical device");
+    console.warn("Push notifications require a physical device");
+    return null;
   }
 
   const { status: existingStatus } =
@@ -30,7 +30,8 @@ export async function registerForPushNotificationsAsync() {
   }
 
   if (finalStatus !== "granted") {
-    throw new Error("Notification permission not granted");
+    console.warn("Failed to get push token permission");
+    return null;
   }
 
   const projectId =
@@ -38,7 +39,7 @@ export async function registerForPushNotificationsAsync() {
     Constants.easConfig?.projectId;
 
   if (!projectId) {
-    throw new Error("Missing EAS projectId");
+    throw new Error("Missing Expo projectId");
   }
 
   const token = (
@@ -54,3 +55,4 @@ export async function registerForPushNotificationsAsync() {
 
   return token;
 }
+
