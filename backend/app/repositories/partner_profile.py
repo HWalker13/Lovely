@@ -1,4 +1,4 @@
-from app.firestore import get_db
+from app.repositories.firestore import get_db
 from app.models.partner_profile import PartnerProfileV1
 
 
