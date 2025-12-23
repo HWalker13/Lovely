@@ -16,6 +16,7 @@ from app.services.nudge_generator import generate_profile_nudges
 
 
 
+
 app = FastAPI()
 
 
