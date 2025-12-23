@@ -8,11 +8,12 @@ from app.repositories.partner_profile import (
     get_partner_profile,
     upsert_partner_profile,
 )
-from backend.app.repositories.firestore import get_db
+from app.repositories.firestore import get_db
 
 from app.models.partner_profile import PartnerProfileV1
 from app.models.nudge import Nudgev1
 from app.services.nudge_generator import generate_profile_nudges
+
 
 
 app = FastAPI()
