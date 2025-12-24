@@ -14,6 +14,7 @@ Notifications.setNotificationHandler({
 });
 
 export async function registerForPushNotificationsAsync(): Promise<string | null> {
+  // Push notifications are not required during Phase 2
   if (!Device.isDevice) {
     console.warn("Push notifications require a physical device");
     return null;
@@ -38,8 +39,10 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
     Constants.expoConfig?.extra?.eas?.projectId ??
     Constants.easConfig?.projectId;
 
+  // IMPORTANT FIX: do NOT crash if projectId is missing
   if (!projectId) {
-    throw new Error("Missing Expo projectId");
+    console.warn("Push notifications disabled: missing Expo projectId");
+    return null;
   }
 
   const token = (
@@ -55,4 +58,5 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
 
   return token;
 }
+
 

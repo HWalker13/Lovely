@@ -5,20 +5,23 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
+
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.LovelyApp"
+      "bundleIdentifier": "com.anonymous.LovelyApp",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
+
     "android": {
       "package": "com.anonymous.LovelyApp"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ]
+
+    "assetBundlePatterns": ["**/*"]
   }
 }
+
+
