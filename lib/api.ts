@@ -30,7 +30,7 @@ async function request<T>(
 ): Promise<T> {
   const headers = await getAuthHeaders(user);
 
-console.log("API REQUEST:", `${BASE_URL}/partner-profile`); //Delete Later
+console.log("API REQUEST:", `${BASE_URL}/partner-profile`); 
 
   const res = await fetch(`${BASE_URL}${path}`, {
     ...options,

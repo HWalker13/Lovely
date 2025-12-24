@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
-      // 🔒 HARD GUARD: no user, no backend call
+      //  HARD GUARD: no user, no backend call
       if (!firebaseUser) {
         setUser(null);
         setStatus("unauthenticated");
