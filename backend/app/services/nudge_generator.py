@@ -2,17 +2,17 @@ from typing import List
 from app.models.nudge import Nudgev1
 
 
-def generate_profile_nudges(uid: str, profile) -> List[NudgeV1]:
+def generate_profile_nudges(uid: str, profile) -> List[Nudgev1]:
     """
     Generate nudges based on the user's partner profile state.
     Pure logic. No Firestore access here.
     """
-    nudges: List[NudgeV1] = []
+    nudges: List[Nudgev1] = []
 
     # Case 1: No profile at all
     if profile is None:
         nudges.append(
-            NudgeV1(
+            Nudgev1(
                 user_uid=uid,
                 type="profile_completion",
                 title="Let’s get started",
@@ -24,7 +24,7 @@ def generate_profile_nudges(uid: str, profile) -> List[NudgeV1]:
     # Case 2: Missing love languages
     if not profile.love_languages:
         nudges.append(
-            NudgeV1(
+            Nudgev1(
                 user_uid=uid,
                 type="profile_completion",
                 title="Add love languages",
@@ -36,7 +36,7 @@ def generate_profile_nudges(uid: str, profile) -> List[NudgeV1]:
     # Case 3: Missing important dates
     if not profile.important_dates:
         nudges.append(
-            NudgeV1(
+            Nudgev1(
                 user_uid=uid,
                 type="profile_completion",
                 title="Add important dates",
@@ -46,4 +46,3 @@ def generate_profile_nudges(uid: str, profile) -> List[NudgeV1]:
         )
 
     return nudges
-

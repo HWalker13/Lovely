@@ -100,7 +100,8 @@ def generate_nudges(uid: str = Depends(get_current_user_uid)):
     db = get_db()
 
     profile = get_partner_profile(uid)
-    nudges = generate_profile_nudges(uid, profile)
+    profile_model = PartnerProfileV1(**profile) if profile is not None else None
+    nudges = generate_profile_nudges(uid, profile_model)
 
     created = []
 
@@ -121,7 +122,6 @@ def generate_nudges(uid: str = Depends(get_current_user_uid)):
         "created_count": len(created),
         "nudges": created,
     }
-
 
 
 
