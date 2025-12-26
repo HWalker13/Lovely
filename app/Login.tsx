@@ -1,16 +1,18 @@
 // app/Login.tsx
+import { auth } from "@/lib/auth";
 import { useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from "react-native";
-import { auth } from "../firebaseConfig";
+
+
 
 export default function Login() {
   const router = useRouter();

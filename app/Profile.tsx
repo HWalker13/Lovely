@@ -1,28 +1,80 @@
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
 import {
     ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { signOut } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { auth } from "@/lib/auth";
+import { signOut } from "firebase/auth";
 
 export default function Profile() {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<'overview' | 'library'>('library');
+    const [activeTab, setActiveTab] = useState<"overview" | "library">("library");
 
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            router.replace('/Splash');
+            router.replace("/Splash");
         } catch (err) {
-            console.log('Logout error:', err);
+            console.log("Logout error:", err);
+        }
+    };
+
+    const handlePutPartnerProfile = async () => {
+        try {
+            const user = auth.currentUser;
+
+            if (!user) {
+                console.log("[PUT] No authenticated user");
+                return;
+            }
+
+            const token = await user.getIdToken();
+
+            const payload = {
+                context: {
+                    user_name: "Daniel",
+                    partner_name: "Test Partner",
+                    relationship_stage: "dating",
+                    relationship_start_date: "2024-01-01",
+                },
+                pronouns: "she/her",
+                important_dates: {
+                    birthday: "2000-02-03",
+                    anniversary: "2021-06-11",
+                },
+                preferences: ["coffee", "walks", "music"],
+                love_languages: ["quality time"],
+                boundaries: ["needs space"],
+                notes: "initial profile seed",
+            };
+
+            const response = await fetch(
+                "http://192.168.1.89:8000/partner-profile",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                }
+            );
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text);
+            }
+
+            console.log("[PUT] /partner-profile → 200 OK");
+        } catch (err) {
+            console.log("[PUT] Failed:", err);
         }
     };
 
@@ -36,7 +88,7 @@ export default function Profile() {
                 <View style={styles.topBar}>
                     <TouchableOpacity
                         style={styles.iconButton}
-                        onPress={() => router.push('Homescreen')}
+                        onPress={() => router.push("Homescreen")}
                     >
                         <Ionicons name="chevron-back" size={22} color="#ff8c00" />
                     </TouchableOpacity>
@@ -44,16 +96,18 @@ export default function Profile() {
                     <Text style={styles.screenTitle}>Profile</Text>
 
                     <TouchableOpacity style={styles.iconButton}>
-                        <Ionicons name="settings-outline" size={22} color="#ff8c00" />
+                        <Ionicons
+                            name="settings-outline"
+                            size={22}
+                            color="#ff8c00"
+                        />
                     </TouchableOpacity>
                 </View>
 
                 {/* Avatar */}
                 <View style={styles.headerSection}>
                     <View style={styles.avatarCircle} />
-
                     <Text style={styles.partnerName}>Partner Name</Text>
-
                     <Text style={styles.metaText}>
                         Anniversary: June 11, 2021 | Birthday: Feb 3
                     </Text>
@@ -64,14 +118,16 @@ export default function Profile() {
                     <TouchableOpacity
                         style={[
                             styles.segmentButton,
-                            activeTab === 'overview' && styles.segmentButtonActive,
+                            activeTab === "overview" &&
+                                styles.segmentButtonActive,
                         ]}
-                        onPress={() => setActiveTab('overview')}
+                        onPress={() => setActiveTab("overview")}
                     >
                         <Text
                             style={[
                                 styles.segmentText,
-                                activeTab === 'overview' && styles.segmentTextActive,
+                                activeTab === "overview" &&
+                                    styles.segmentTextActive,
                             ]}
                         >
                             Overview
@@ -81,14 +137,16 @@ export default function Profile() {
                     <TouchableOpacity
                         style={[
                             styles.segmentButton,
-                            activeTab === 'library' && styles.segmentButtonActive,
+                            activeTab === "library" &&
+                                styles.segmentButtonActive,
                         ]}
-                        onPress={() => setActiveTab('library')}
+                        onPress={() => setActiveTab("library")}
                     >
                         <Text
                             style={[
                                 styles.segmentText,
-                                activeTab === 'library' && styles.segmentTextActive,
+                                activeTab === "library" &&
+                                    styles.segmentTextActive,
                             ]}
                         >
                             Library
@@ -107,16 +165,28 @@ export default function Profile() {
 
                     <View style={styles.cardBody}>
                         <Text style={styles.fieldLabel}>Food:</Text>
-                        <Text style={styles.fieldValue}>Italian, sushi, brunch dates</Text>
+                        <Text style={styles.fieldValue}>
+                            Italian, sushi, brunch dates
+                        </Text>
 
-                        <Text style={[styles.fieldLabel, styles.fieldLabelSpacing]}>
+                        <Text
+                            style={[
+                                styles.fieldLabel,
+                                styles.fieldLabelSpacing,
+                            ]}
+                        >
                             Music:
                         </Text>
                         <Text style={styles.fieldValue}>
                             Indie, acoustic, movie scores
                         </Text>
 
-                        <Text style={[styles.fieldLabel, styles.fieldLabelSpacing]}>
+                        <Text
+                            style={[
+                                styles.fieldLabel,
+                                styles.fieldLabelSpacing,
+                            ]}
+                        >
                             Colors:
                         </Text>
                         <Text style={styles.fieldValue}>
@@ -138,15 +208,33 @@ export default function Profile() {
                         <Text style={styles.fieldLabel}>Clothing:</Text>
                         <Text style={styles.fieldValue}>Small</Text>
 
-                        <Text style={[styles.fieldLabel, styles.fieldLabelSpacing]}>
+                        <Text
+                            style={[
+                                styles.fieldLabel,
+                                styles.fieldLabelSpacing,
+                            ]}
+                        >
                             Shoe:
                         </Text>
                         <Text style={styles.fieldValue}>7</Text>
                     </View>
                 </View>
 
-                {/* ✔ THE INTENDED ORANGE LOGOUT BUTTON */}
-                <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                {/* DEV PUT BUTTON */}
+                <TouchableOpacity
+                    style={[styles.logoutButton, { backgroundColor: "#333" }]}
+                    onPress={handlePutPartnerProfile}
+                >
+                    <Text style={styles.logoutButtonText}>
+                        PUT Partner Profile
+                    </Text>
+                </TouchableOpacity>
+
+                {/* Logout */}
+                <TouchableOpacity
+                    style={styles.logoutButton}
+                    onPress={handleLogout}
+                >
                     <Text style={styles.logoutButtonText}>Log Out</Text>
                 </TouchableOpacity>
 
@@ -159,7 +247,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#000000',
+        backgroundColor: "#000000",
     },
     container: {
         paddingHorizontal: 24,
@@ -167,25 +255,25 @@ const styles = StyleSheet.create({
         paddingBottom: 24,
     },
     topBar: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
         marginBottom: 24,
     },
     iconButton: {
         width: 32,
         height: 32,
         borderRadius: 16,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
     },
     screenTitle: {
         fontSize: 20,
-        fontWeight: '700',
-        color: '#ffffff',
+        fontWeight: "700",
+        color: "#ffffff",
     },
     headerSection: {
-        alignItems: 'center',
+        alignItems: "center",
         marginBottom: 24,
     },
     avatarCircle: {
@@ -193,24 +281,24 @@ const styles = StyleSheet.create({
         height: 110,
         borderRadius: 55,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.25)',
-        backgroundColor: 'rgba(255,255,255,0.08)',
+        borderColor: "rgba(255,255,255,0.25)",
+        backgroundColor: "rgba(255,255,255,0.08)",
         marginBottom: 16,
     },
     partnerName: {
         fontSize: 22,
-        fontWeight: '700',
-        color: '#ffffff',
+        fontWeight: "700",
+        color: "#ffffff",
         marginBottom: 4,
     },
     metaText: {
         fontSize: 13,
-        color: 'rgba(255,255,255,0.75)',
-        textAlign: 'center',
+        color: "rgba(255,255,255,0.75)",
+        textAlign: "center",
     },
     segmentRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        justifyContent: "space-between",
         marginTop: 24,
         marginBottom: 24,
     },
@@ -219,76 +307,71 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 24,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.2)',
-        alignItems: 'center',
+        borderColor: "rgba(255,255,255,0.2)",
+        alignItems: "center",
         marginHorizontal: 4,
-        backgroundColor: 'rgba(255,255,255,0.06)',
+        backgroundColor: "rgba(255,255,255,0.06)",
     },
     segmentButtonActive: {
-        backgroundColor: 'rgba(255,255,255,0.18)',
+        backgroundColor: "rgba(255,255,255,0.18)",
     },
     segmentText: {
-        color: 'rgba(255,255,255,0.7)',
+        color: "rgba(255,255,255,0.7)",
         fontSize: 15,
-        fontWeight: '600',
+        fontWeight: "600",
     },
     segmentTextActive: {
-        color: '#ffffff',
+        color: "#ffffff",
     },
     card: {
         borderRadius: 24,
-        backgroundColor: 'rgba(0,0,0,0.6)',
+        backgroundColor: "rgba(0,0,0,0.6)",
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: "rgba(255,255,255,0.08)",
         paddingHorizontal: 18,
         paddingVertical: 16,
         marginBottom: 16,
     },
     cardHeaderRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         marginBottom: 12,
     },
     cardTitle: {
         fontSize: 13,
         letterSpacing: 1,
-        color: 'rgba(255,255,255,0.8)',
+        color: "rgba(255,255,255,0.8)",
     },
     cardLink: {
         fontSize: 13,
-        color: 'rgba(255,255,255,0.75)',
+        color: "rgba(255,255,255,0.75)",
     },
     cardBody: {
         marginTop: 4,
     },
     fieldLabel: {
         fontSize: 13,
-        color: 'rgba(255,140,0,1)',
+        color: "rgba(255,140,0,1)",
     },
     fieldLabelSpacing: {
         marginTop: 10,
     },
     fieldValue: {
         fontSize: 16,
-        color: '#ffffff',
-        fontWeight: '600',
+        color: "#ffffff",
+        fontWeight: "600",
     },
-
-    /* ✔ INTENDED ORANGE LOGOUT BUTTON */
     logoutButton: {
-        backgroundColor: '#ff8c00',
+        backgroundColor: "#ff8c00",
         paddingVertical: 14,
         borderRadius: 14,
         marginTop: 28,
-        alignItems: 'center',
+        alignItems: "center",
     },
     logoutButtonText: {
-        color: '#000',
+        color: "#000",
         fontSize: 16,
-        fontWeight: '700',
+        fontWeight: "700",
     },
 });
-
-
-

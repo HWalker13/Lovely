@@ -40,9 +40,12 @@ def read_partner_profile(uid: str = Depends(get_current_user_uid)):
     profile = get_partner_profile(uid)
 
     if profile is None:
+        print(f"[PROFILE] uid={uid} → EXISTS: False")
         return {"exists": False, "profile": None}
 
+    print(f"[PROFILE] uid={uid} → EXISTS: True")
     return {"exists": True, "profile": profile}
+
 
 
 @app.put("/partner-profile")

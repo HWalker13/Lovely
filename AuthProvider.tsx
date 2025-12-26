@@ -1,7 +1,7 @@
 import { onAuthStateChanged, User } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "./firebaseConfig";
 import { getPartnerProfile } from "./lib/api";
+import { auth } from "./lib/auth";
 
 type AppStatus =
   | "loading"
@@ -27,8 +27,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [status, setStatus] = useState<AppStatus>("loading");
 
   useEffect(() => {
+    let mounted = true;
+
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
-      //  HARD GUARD: no user, no backend call
+      if (!mounted) return;
+
+      console.log("[AUTH] state changed:", firebaseUser?.uid ?? "NO USER");
+
+      // 🔒 HARD GUARD — NO USER, NO BACKEND CALLS
       if (!firebaseUser) {
         setUser(null);
         setStatus("unauthenticated");
@@ -36,29 +42,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
+      // User exists → begin authenticated flow
       setUser(firebaseUser);
       setStatus("loading");
+      setLoading(true);
 
       try {
+        // ✅ Only called when user is guaranteed to exist
         const result = await getPartnerProfile(firebaseUser);
 
-        if (!result.exists) {
-          setStatus("needsOnboarding");
-        } else {
+        if (!mounted) return;
+
+        if (result.exists) {
           setStatus("ready");
+        } else {
+          setStatus("needsOnboarding");
         }
       } catch (err: any) {
+        if (!mounted) return;
+
+        // Only treat auth failures as unauthenticated
         if (err?.status === 401) {
+          console.warn("[AUTH] Backend rejected token");
           setStatus("unauthenticated");
         } else {
-          console.error("Failed to fetch partner profile:", err);
+          console.error("[AUTH] Failed to fetch partner profile:", err);
         }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     });
 
-    return unsub;
+    return () => {
+      mounted = false;
+      unsub();
+    };
   }, []);
 
   console.log("AUTH PROVIDER:", { user, loading, status });
@@ -71,7 +91,3 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-
-
-
-

@@ -2,6 +2,10 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+
     "baseUrl": ".",
     "paths": {
       "@/*": ["*"]
@@ -21,3 +25,4 @@
     "app/(tabs)/Homescreen.js"
   ]
 }
+

@@ -1,11 +1,81 @@
-import { useRouter } from 'expo-router';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-const ORANGE = '#ff8c00';
-const BLACK = '#000';
+import { auth } from "@/lib/auth";
+
+const ORANGE = "#ff8c00";
+const BLACK = "#000";
 
 export default function FirstScreen() {
   const router = useRouter();
+
+  const [foods, setFoods] = useState("");
+  const [movies, setMovies] = useState("");
+  const [other, setOther] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleFinishOnboarding = async () => {
+    try {
+      const user = auth.currentUser;
+
+      if (!user) {
+        console.log("[ONBOARDING] No authenticated user");
+        return;
+      }
+
+      setLoading(true);
+
+      const token = await user.getIdToken();
+
+      const payload = {
+        context: {
+          user_name: user.email ?? "user",
+          partner_name: "Partner",
+          relationship_stage: "dating",
+        },
+        preferences: [
+          foods.trim(),
+          movies.trim(),
+          other.trim(),
+        ].filter(Boolean),
+        notes: "onboarding complete",
+      };
+
+      console.log("[ONBOARDING] PUT /partner-profile → sending");
+
+      const response = await fetch(
+        "http://192.168.1.89:8000/partner-profile",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text);
+      }
+
+      console.log("[ONBOARDING] PUT /partner-profile → 200 OK");
+
+      router.replace("Homescreen");
+    } catch (err) {
+      console.log("[ONBOARDING] Failed:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -16,6 +86,8 @@ export default function FirstScreen() {
         placeholderTextColor="#777"
         style={styles.input}
         multiline
+        value={foods}
+        onChangeText={setFoods}
       />
 
       <TextInput
@@ -23,6 +95,8 @@ export default function FirstScreen() {
         placeholderTextColor="#777"
         style={styles.input}
         multiline
+        value={movies}
+        onChangeText={setMovies}
       />
 
       <TextInput
@@ -30,18 +104,18 @@ export default function FirstScreen() {
         placeholderTextColor="#777"
         style={styles.input}
         multiline
+        value={other}
+        onChangeText={setOther}
       />
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() =>
-          router.push({
-            pathname: 'Splash',
-            params: { next: 'Homescreen' },
-          })
-        }
+        onPress={handleFinishOnboarding}
+        disabled={loading}
       >
-        <Text style={styles.buttonText}>Continue</Text>
+        <Text style={styles.buttonText}>
+          {loading ? "Saving..." : "Continue"}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -56,21 +130,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    color: '#fff',
-    fontWeight: '700',
+    color: "#fff",
+    fontWeight: "700",
     marginBottom: 25,
-    textAlign: 'center',
+    textAlign: "center",
   },
   input: {
-    backgroundColor: '#111',
+    backgroundColor: "#111",
     borderWidth: 1,
-    borderColor: '#222',
+    borderColor: "#222",
     padding: 14,
     borderRadius: 10,
-    color: '#fff',
+    color: "#fff",
     marginBottom: 20,
     minHeight: 80,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   button: {
     backgroundColor: ORANGE,
@@ -79,9 +153,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
-    color: '#000',
-    fontWeight: '700',
+    color: "#000",
+    fontWeight: "700",
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
+

@@ -1,12 +1,12 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { onAuthStateChanged } from 'firebase/auth';
-import { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
-import { auth } from '../firebaseConfig';
+import { useAuth } from "@/AuthProvider";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useRef } from "react";
+import { Animated, StyleSheet, View } from "react-native";
 
 export default function Splash() {
   const router = useRouter();
   const { next } = useLocalSearchParams<{ next?: string }>();
+  const { status } = useAuth();
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -15,32 +15,33 @@ export default function Splash() {
       duration: 700,
       useNativeDriver: true,
     }).start();
+  }, []);
 
-    const unsub = onAuthStateChanged(auth, user => {
-      setTimeout(() => {
+  useEffect(() => {
+    if (status === "loading") return;
 
-        // 1. If a next param exists → ALWAYS obey it
-        if (next && next.length > 0) {
-          router.replace(String(next));
-          return;
-        }
+    const timeout = setTimeout(() => {
+      // 1. If a next param exists → ALWAYS obey it
+      if (next && next.length > 0) {
+        router.replace(String(next));
+        return;
+      }
 
-        // 2. No next param? Follow normal logic
-        if (user) {
-          router.replace('/(tabs)/Homescreen');
-        } else {
-          router.replace('/Onboarding');
-        }
-      }, 700);
-    });
+      // 2. No next param? Follow normal logic
+      if (status === "ready" || status === "needsOnboarding") {
+        router.replace("/(tabs)/Homescreen");
+      } else {
+        router.replace("/Onboarding");
+      }
+    }, 700);
 
-    return unsub;
-  }, [next]);
+    return () => clearTimeout(timeout);
+  }, [status, next]);
 
   return (
     <View style={styles.container}>
       <Animated.Image
-        source={require('../assets/images/flame.png')}
+        source={require("../assets/images/flame.png")}
         style={[styles.logo, { opacity: fade }]}
       />
     </View>
@@ -50,16 +51,18 @@ export default function Splash() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#000",
+    justifyContent: "center",
+    alignItems: "center",
   },
   logo: {
     width: 170,
     height: 170,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
 });
+
+
 
 
 

@@ -1,4 +1,5 @@
 // app/Signup.tsx
+import { auth } from "@/lib/auth";
 import { useRouter } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
@@ -10,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth /*, db*/ } from "../firebaseConfig";
+
 // If you want Firestore user docs later, uncomment:
 // import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
@@ -55,7 +56,7 @@ export default function Signup() {
       */
 
       // Signup → Splash → DescribePartner (shown once after signup)
-      router.replace("/Splash?next=/DescribePartner");
+      router.replace("/?next=/DescribePartner");
     } catch (err: any) {
       console.log("Signup error:", err);
       if (err.code === "auth/email-already-in-use") {
