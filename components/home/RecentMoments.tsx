@@ -4,6 +4,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { TEXT_SIZE } from '../../constants/typography';
 import { COLORS } from '../../constants/colors';
 
+type RecentMoment = {
+    id: string;
+    timeLabel: string;
+    text: string;
+};
+
 const H_PADDING = 20;
 const CARD_SPACING = 12;
 const PEEK = 24;
@@ -11,7 +17,7 @@ const CARD_WIDTH = 232;
 const CARD_HEIGHT = 140;
 
 // Temporary seed data
-const recentMoments = [
+const recentMoments: RecentMoment[] = [
     { id: 'rm1', timeLabel: 'YESTERDAY', text: 'Brought her morning coffee before work.' },
     { id: 'rm2', timeLabel: 'LAST SUNDAY', text: 'Watched her favorite show together.' },
     { id: 'rm3', timeLabel: 'EARLIER THIS WEEK', text: 'Sent a short note before her meeting.' },
@@ -20,9 +26,13 @@ const recentMoments = [
 const RecentMoments = () => {
     const itemLayout = useMemo(() => {
         const interval = CARD_WIDTH + CARD_SPACING;
-        return (_data, index) => ({ length: interval, offset: interval * index, index });
+        return (_data: ArrayLike<RecentMoment> | null | undefined, index: number) => ({
+            length: interval,
+            offset: interval * index,
+            index
+        });
     }, []);
-    const renderCard = ({ item }) => (
+    const renderCard = ({ item }: { item: RecentMoment }) => (
         <Pressable
             style={({ pressed }) => [
                 styles.card,

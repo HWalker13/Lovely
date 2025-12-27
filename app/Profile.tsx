@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+    ActivityIndicator,
     ScrollView,
     StyleSheet,
     Text,
@@ -17,6 +18,7 @@ import { signOut } from "firebase/auth";
 export default function Profile() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<"overview" | "library">("library");
+    const [isPuttingProfile, setIsPuttingProfile] = useState(false);
 
     const handleLogout = async () => {
         try {
@@ -34,6 +36,7 @@ export default function Profile() {
                 return;
             }
 
+            setIsPuttingProfile(true);
             const payload = {
                 context: {
                     user_name: "Daniel",
@@ -54,6 +57,8 @@ export default function Profile() {
 
             await putPartnerProfile(user, payload);
         } catch (_err) {
+        } finally {
+            setIsPuttingProfile(false);
         }
     };
 
@@ -67,7 +72,7 @@ export default function Profile() {
                 <View style={styles.topBar}>
                     <TouchableOpacity
                         style={styles.iconButton}
-                        onPress={() => router.push("Homescreen")}
+                        onPress={() => router.push("HomeScreen")}
                     >
                         <Ionicons name="chevron-back" size={22} color="#ff8c00" />
                     </TouchableOpacity>
@@ -203,10 +208,15 @@ export default function Profile() {
                 <TouchableOpacity
                     style={[styles.logoutButton, { backgroundColor: "#333" }]}
                     onPress={handlePutPartnerProfile}
+                    disabled={isPuttingProfile}
                 >
-                    <Text style={styles.logoutButtonText}>
-                        PUT Partner Profile
-                    </Text>
+                    {isPuttingProfile ? (
+                        <ActivityIndicator color="#000" />
+                    ) : (
+                        <Text style={styles.logoutButtonText}>
+                            PUT Partner Profile
+                        </Text>
+                    )}
                 </TouchableOpacity>
 
                 {/* Logout */}

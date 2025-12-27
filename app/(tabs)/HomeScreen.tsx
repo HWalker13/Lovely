@@ -29,12 +29,17 @@ import {
 } from '../../utils/storageUtils';
 
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebaseConfig';
+import { auth } from '@/lib/auth';
+
+type Gesture = {
+  id: string;
+  text: string;
+};
 
 const HomeScreen = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
   const [tasksCompleted, setTasksCompleted] = useState(0);
-  const [todaysGesture, setTodaysGesture] = useState(null);
+  const [todaysGesture, setTodaysGesture] = useState<Gesture | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
   const [completionPhrase, setCompletionPhrase] = useState('');
   const [canUndo, setCanUndo] = useState(false);
@@ -128,7 +133,8 @@ const HomeScreen = () => {
 
         try {
           const todayStr = getDateString();
-          await saveDailyCompletion(todayStr, todaysGesture.id, true);
+          const gestureId = (todaysGesture as Gesture).id;
+          await saveDailyCompletion(todayStr, gestureId, true);
           const newStreak = await calculateStreak();
           setTasksCompleted(newStreak);
           await saveStreak(newStreak);
@@ -161,7 +167,8 @@ const HomeScreen = () => {
 
         try {
           const todayStr = getDateString();
-          await saveDailyCompletion(todayStr, todaysGesture.id, false);
+          const gestureId = (todaysGesture as Gesture).id;
+          await saveDailyCompletion(todayStr, gestureId, false);
           const newStreak = await calculateStreak();
           setTasksCompleted(newStreak);
           await saveStreak(newStreak);
@@ -182,7 +189,7 @@ const HomeScreen = () => {
   };
 
   const handlePlanPress = () => {
-    router.push('/chatpage');
+    router.push('/ChatPage');
   };
 
   // Keep handleLogout function in case Profile screen needs it
@@ -255,7 +262,7 @@ const HomeScreen = () => {
       {/* Floating Flame */}
       <View style={styles.flameContainer}>
         <TouchableOpacity
-          onPress={() => router.push('/chatpage')}
+          onPress={() => router.push('/ChatPage')}
           activeOpacity={0.8}
           style={styles.floatingFlame}
         >
@@ -298,4 +305,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-

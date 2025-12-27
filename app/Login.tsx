@@ -35,8 +35,8 @@ export default function Login() {
 
       await signInWithEmailAndPassword(auth, email.trim(), password);
 
-      // Login → Splash → Homescreen for returning users
-      router.replace("/Splash?next=/(tabs)/Homescreen");
+      // Login → Splash → HomeScreen for returning users
+      router.replace("/Splash?next=/(tabs)/HomeScreen");
     } catch (err: any) {
       if (
         err.code === "auth/user-not-found" ||

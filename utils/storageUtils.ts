@@ -8,10 +8,28 @@ const KEYS = {
     TODAYS_GESTURE: '@lovely_todays_gesture_',
 };
 
+type CompletionData = {
+    date: string;
+    gestureId: string;
+    completed: boolean;
+    timestamp: string;
+};
+
+type GestureHistoryEntry = {
+    date: string;
+    gestureId: string;
+    category: string;
+};
+
+type Gesture = {
+    id: string;
+    [key: string]: unknown;
+};
+
 /**
  * Get date string in YYYY-MM-DD format
  */
-export const getDateString = (date = new Date()) => {
+export const getDateString = (date: Date = new Date()): string => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -21,10 +39,14 @@ export const getDateString = (date = new Date()) => {
 /**
  * Save daily completion status
  */
-export const saveDailyCompletion = async (date, gestureId, completed) => {
+export const saveDailyCompletion = async (
+    date: string,
+    gestureId: string,
+    completed: boolean
+): Promise<boolean> => {
     try {
         const key = `${KEYS.COMPLETION}${date}`;
-        const data = {
+        const data: CompletionData = {
             date,
             gestureId,
             completed,
@@ -41,7 +63,9 @@ export const saveDailyCompletion = async (date, gestureId, completed) => {
 /**
  * Get daily completion status
  */
-export const getDailyCompletion = async (date) => {
+export const getDailyCompletion = async (
+    date: string
+): Promise<CompletionData | null> => {
     try {
         const key = `${KEYS.COMPLETION}${date}`;
         const data = await AsyncStorage.getItem(key);
@@ -55,7 +79,9 @@ export const getDailyCompletion = async (date) => {
 /**
  * Save gesture history (recent picks for anti-repeat logic)
  */
-export const saveGestureHistory = async (history) => {
+export const saveGestureHistory = async (
+    history: GestureHistoryEntry[]
+): Promise<boolean> => {
     try {
         await AsyncStorage.setItem(KEYS.GESTURE_HISTORY, JSON.stringify(history));
         return true;
@@ -68,7 +94,7 @@ export const saveGestureHistory = async (history) => {
 /**
  * Get gesture history
  */
-export const getGestureHistory = async () => {
+export const getGestureHistory = async (): Promise<GestureHistoryEntry[]> => {
     try {
         const data = await AsyncStorage.getItem(KEYS.GESTURE_HISTORY);
         return data ? JSON.parse(data) : [];
@@ -81,7 +107,10 @@ export const getGestureHistory = async () => {
 /**
  * Save today's gesture
  */
-export const saveTodaysGesture = async (date, gesture) => {
+export const saveTodaysGesture = async (
+    date: string,
+    gesture: Gesture
+): Promise<boolean> => {
     try {
         const key = `${KEYS.TODAYS_GESTURE}${date}`;
         await AsyncStorage.setItem(key, JSON.stringify(gesture));
@@ -95,7 +124,9 @@ export const saveTodaysGesture = async (date, gesture) => {
 /**
  * Get today's gesture
  */
-export const getTodaysGesture = async (date) => {
+export const getTodaysGesture = async (
+    date: string
+): Promise<Gesture | null> => {
     try {
         const key = `${KEYS.TODAYS_GESTURE}${date}`;
         const data = await AsyncStorage.getItem(key);
@@ -109,7 +140,7 @@ export const getTodaysGesture = async (date) => {
 /**
  * Calculate current streak (consecutive completed days)
  */
-export const calculateStreak = async () => {
+export const calculateStreak = async (): Promise<number> => {
     try {
         let streak = 0;
         let currentDate = new Date();
@@ -149,7 +180,7 @@ export const calculateStreak = async () => {
 /**
  * Save current streak to storage
  */
-export const saveStreak = async (streak) => {
+export const saveStreak = async (streak: number): Promise<boolean> => {
     try {
         await AsyncStorage.setItem(KEYS.CURRENT_STREAK, String(streak));
         return true;
@@ -162,7 +193,7 @@ export const saveStreak = async (streak) => {
 /**
  * Get stored streak
  */
-export const getStoredStreak = async () => {
+export const getStoredStreak = async (): Promise<number> => {
     try {
         const streak = await AsyncStorage.getItem(KEYS.CURRENT_STREAK);
         return streak ? parseInt(streak, 10) : 0;

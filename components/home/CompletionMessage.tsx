@@ -4,11 +4,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { TEXT_SIZE } from '../../constants/typography';
 
+type CompletionMessageProps = {
+    gesture: { id: string; text: string } | null;
+    phrase: string;
+    visible: boolean;
+    onUndo: () => void;
+    canUndo: boolean;
+};
+
 /**
  * Completion Message component
  * Shows completion phrase as a simple header with pulsing heart
  */
-const CompletionMessage = ({ gesture, phrase, visible, onUndo, canUndo }) => {
+const CompletionMessage = ({ gesture, phrase, visible, onUndo, canUndo }: CompletionMessageProps) => {
     // Heart scale animation using Animated
     const heartScale = useRef(new Animated.Value(1)).current;
 

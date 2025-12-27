@@ -2,7 +2,7 @@
  * Returns a greeting based on the current time of day
  * @returns {string} - greeting message (good morning/afternoon/evening/night)
  */
-export const getGreeting = () => {
+export const getGreeting = (): string => {
     const hour = new Date().getHours();
 
     if (hour >= 5 && hour < 12) {

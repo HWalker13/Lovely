@@ -7,10 +7,26 @@ import {
     saveGestureHistory
 } from './storageUtils';
 
+type Gesture = {
+    id: string;
+    category: string;
+    text: string;
+    preferences: string[];
+};
+
+type GestureHistoryEntry = {
+    date: string;
+    gestureId: string;
+    category: string;
+};
+
+const GESTURE_LIST = GESTURES as Gesture[];
+const GESTURE_CATEGORY_MAP = GESTURE_CATEGORIES as Record<string, string>;
+
 /**
  * Get local midnight for a given date
  */
-export const getLocalMidnight = (date = new Date()) => {
+export const getLocalMidnight = (date: Date = new Date()): Date => {
     const midnight = new Date(date);
     midnight.setHours(0, 0, 0, 0);
     return midnight;
@@ -19,7 +35,7 @@ export const getLocalMidnight = (date = new Date()) => {
 /**
  * Get next midnight
  */
-export const getNextMidnight = (date = new Date()) => {
+export const getNextMidnight = (date: Date = new Date()): Date => {
     const midnight = getLocalMidnight(date);
     midnight.setDate(midnight.getDate() + 1);
     return midnight;
@@ -28,7 +44,7 @@ export const getNextMidnight = (date = new Date()) => {
 /**
  * Check if current time is after a given timestamp's midnight
  */
-export const isAfterMidnight = (timestamp) => {
+export const isAfterMidnight = (timestamp: string | number | Date): boolean => {
     const now = new Date();
     const targetDate = new Date(timestamp);
     const nextMidnight = getNextMidnight(targetDate);
@@ -39,7 +55,7 @@ export const isAfterMidnight = (timestamp) => {
  * Check if we can still undo today's completion
  * (before midnight of current day)
  */
-export const canUndoToday = () => {
+export const canUndoToday = (): boolean => {
     const now = new Date();
     const nextMidnight = getNextMidnight(now);
     return now < nextMidnight;
@@ -49,7 +65,9 @@ export const canUndoToday = () => {
  * Generate a daily gesture with anti-repeat logic
  * Avoids gestures from the same category used within last 7-14 days
  */
-export const generateDailyGesture = async (preferences = []) => {
+export const generateDailyGesture = async (
+    preferences: string[] = []
+): Promise<Gesture> => {
     try {
         // Get gesture history
         const history = await getGestureHistory();
@@ -58,7 +76,7 @@ export const generateDailyGesture = async (preferences = []) => {
         const now = new Date();
         const recentCategories = new Set();
 
-        history.forEach(entry => {
+        history.forEach((entry: GestureHistoryEntry) => {
             const entryDate = new Date(entry.date);
             const daysDiff = Math.floor((now - entryDate) / (1000 * 60 * 60 * 24));
 
@@ -69,9 +87,9 @@ export const generateDailyGesture = async (preferences = []) => {
         });
 
         // Filter available gestures
-        let availableGestures = GESTURES.filter(gesture => {
+        let availableGestures = GESTURE_LIST.filter(gesture => {
             // Avoid recently used categories
-            if (recentCategories.has(gesture.category) && recentCategories.size < Object.keys(GESTURE_CATEGORIES).length - 1) {
+            if (recentCategories.has(gesture.category) && recentCategories.size < Object.keys(GESTURE_CATEGORY_MAP).length - 1) {
                 return false;
             }
 
@@ -86,7 +104,7 @@ export const generateDailyGesture = async (preferences = []) => {
         // If too restrictive, just avoid last 7 days
         if (availableGestures.length === 0) {
             const veryRecentCategories = new Set();
-            history.forEach(entry => {
+            history.forEach((entry: GestureHistoryEntry) => {
                 const entryDate = new Date(entry.date);
                 const daysDiff = Math.floor((now - entryDate) / (1000 * 60 * 60 * 24));
                 if (daysDiff >= 0 && daysDiff <= 7) {
@@ -94,14 +112,14 @@ export const generateDailyGesture = async (preferences = []) => {
                 }
             });
 
-            availableGestures = GESTURES.filter(gesture =>
+            availableGestures = GESTURE_LIST.filter(gesture =>
                 !veryRecentCategories.has(gesture.category)
             );
         }
 
         // If still no gestures, just pick any
         if (availableGestures.length === 0) {
-            availableGestures = GESTURES;
+            availableGestures = GESTURE_LIST;
         }
 
         // Pick random gesture from available
@@ -125,7 +143,7 @@ export const generateDailyGesture = async (preferences = []) => {
     } catch (error) {
         console.error('Error generating gesture:', error);
         // Fallback to first gesture
-        return GESTURES[0];
+        return GESTURE_LIST[0];
     }
 };
 
@@ -133,7 +151,9 @@ export const generateDailyGesture = async (preferences = []) => {
  * Get or create today's gesture
  * Checks AsyncStorage first, generates if missing
  */
-export const getOrCreateTodaysGesture = async (preferences = []) => {
+export const getOrCreateTodaysGesture = async (
+    preferences: string[] = []
+): Promise<Gesture> => {
     try {
         const todayStr = getDateString();
 
@@ -150,6 +170,6 @@ export const getOrCreateTodaysGesture = async (preferences = []) => {
     } catch (error) {
         console.error('Error getting/creating today\'s gesture:', error);
         // Fallback
-        return GESTURES[0];
+        return GESTURE_LIST[0];
     }
 };

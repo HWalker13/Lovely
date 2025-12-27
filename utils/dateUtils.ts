@@ -2,10 +2,17 @@
  * Returns an array of date objects for the current week and next week
  * @returns {Array} - Array of date objects with day, date, fullDate and isToday properties
  */
-export const getCurrentWeekDates = () => {
+type WeekDate = {
+    day: string;
+    date: number;
+    fullDate: string;
+    isToday: boolean;
+};
+
+export const getCurrentWeekDates = (): WeekDate[] => {
     const today = new Date();
     const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    const dates = [];
+    const dates: WeekDate[] = [];
 
     // Start from Sunday of current week and include 14 days (current week + next week)
     for (let i = 0; i < 14; i++) {

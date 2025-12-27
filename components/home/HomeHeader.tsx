@@ -9,6 +9,12 @@ import { getGreeting } from '../../utils/greetingUtils';
 import { getCurrentWeekDates } from '../../utils/dateUtils';
 import { COLORS } from '../../constants/colors';
 
+type HomeHeaderProps = {
+    tasksCompleted: number;
+    selectedDate: string;
+    onDateSelect: (date: string) => void;
+};
+
 /**
  * Header component for the Home screen
  * 
@@ -17,7 +23,7 @@ import { COLORS } from '../../constants/colors';
  * @param {string} props.selectedDate Currently selected date string
  * @param {Function} props.onDateSelect Function to call when a date is selected
  */
-const HomeHeader = ({ tasksCompleted, selectedDate, onDateSelect }) => {
+const HomeHeader = ({ tasksCompleted, selectedDate, onDateSelect }: HomeHeaderProps) => {
     const weekDates = getCurrentWeekDates();
     const router = useRouter();
 

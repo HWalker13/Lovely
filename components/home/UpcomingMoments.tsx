@@ -4,16 +4,36 @@ import { TEXT_SIZE } from '../../constants/typography';
 import { COLORS } from '../../constants/colors';
 import MomentCard from './MomentCard';
 
+type MomentItem = {
+    id: string;
+    title: string;
+    dateTime?: string;
+    location?: string;
+    note?: string;
+    icon?: string;
+};
+
+type UpcomingMomentsProps = {
+    moments?: MomentItem[];
+    onDetails?: (item: MomentItem) => void;
+    onEdit?: (item: MomentItem) => void;
+    onMenu?: (item: MomentItem) => void;
+};
+
 const { width } = Dimensions.get('window');
 const H_PADDING = 20;    // align with other sections
 const CARD_SPACING = 12; // equal spacing between cards
 const PEEK = 24;         // show a sliver of the next card
 const CARD_WIDTH = width - (H_PADDING * 2) - PEEK;
 
-const UpcomingMoments = ({ moments = [], onDetails, onEdit, onMenu }) => {
+const UpcomingMoments = ({ moments = [], onDetails, onEdit, onMenu }: UpcomingMomentsProps) => {
     const itemLayout = useMemo(() => {
         const interval = CARD_WIDTH + CARD_SPACING;
-        return (_data, index) => ({ length: interval, offset: interval * index, index });
+        return (_data: ArrayLike<MomentItem> | null | undefined, index: number) => ({
+            length: interval,
+            offset: interval * index,
+            index
+        });
     }, []);
 
     return (
@@ -29,7 +49,7 @@ const UpcomingMoments = ({ moments = [], onDetails, onEdit, onMenu }) => {
                 snapToInterval={CARD_WIDTH + CARD_SPACING}
                 decelerationRate="fast"
                 getItemLayout={itemLayout}
-                renderItem={({ item }) => (
+                renderItem={({ item }: { item: MomentItem }) => (
                     <MomentCard
                         item={item}
                         width={CARD_WIDTH}

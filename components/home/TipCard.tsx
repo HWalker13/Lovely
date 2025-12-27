@@ -4,19 +4,31 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { TEXT_SIZE } from '../../constants/typography';
 
-const ICONS = {
+type TipItem = {
+    id: string;
+    type: string;
+    icon: string;
+    text: string;
+};
+
+type TipCardProps = {
+    item: TipItem;
+    width: number;
+};
+
+const ICONS: Record<string, string> = {
     thought: 'bulb',
     lightbulb: 'bulb',
 };
 
-const LABELS = {
+const LABELS: Record<string, string> = {
     reflect: 'Reflect',
     try: 'Try This',
     observe: 'Observation',
 };
 
-const TipCard = ({ item, width }) => {
-    const iconName = ICONS[item.icon] || 'help-circle-outline';
+const TipCard = ({ item, width }: TipCardProps) => {
+    const iconName = (ICONS[item.icon] || 'help-circle-outline') as keyof typeof Ionicons.glyphMap;
     const labelText = LABELS[item.type] || 'Tip';
 
     return (

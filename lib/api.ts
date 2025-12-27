@@ -1,4 +1,5 @@
 import { User } from "firebase/auth";
+import { PartnerProfile } from "@/types/partner-profile";
 
 // NOTE (LOCAL DEVELOPMENT):
 // The backend must be run inside the Python virtual environment (venv)
@@ -158,13 +159,13 @@ async function request<T>(
 export function getPartnerProfile(user: User | null | undefined) {
   return request<{
     exists: boolean;
-    profile: any | null;
+    profile: PartnerProfile | null;
   }>(user, "/partner-profile");
 }
 
 export function putPartnerProfile(
   user: User | null | undefined,
-  profile: any
+  profile: PartnerProfile
 ) {
   // Invalidate cache on write
   responseCache.delete(`${BASE_URL}/partner-profile`);
@@ -174,5 +175,4 @@ export function putPartnerProfile(
     body: JSON.stringify(profile),
   });
 }
-
 

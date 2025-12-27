@@ -4,17 +4,44 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { TEXT_SIZE } from '../../constants/typography';
 
+type MomentItem = {
+    id: string;
+    title: string;
+    dateTime?: string;
+    location?: string;
+    note?: string;
+    icon?: string;
+};
+
+type MomentCardProps = {
+    item: MomentItem;
+    width: number;
+    spacingRight?: number;
+    onPressDetails?: (item: MomentItem) => void;
+    onPressEdit?: (item: MomentItem) => void;
+    onPressMenu?: (item: MomentItem) => void;
+};
+
 /**
  * Uniform event card for Upcoming Moments carousel
  */
 const CARD_HEIGHT = 184;
 
-const MomentCard = ({ item, width, spacingRight = 12, onPressDetails, onPressEdit, onPressMenu }) => {
+const MomentCard = ({
+    item,
+    width,
+    spacingRight = 12,
+    onPressDetails,
+    onPressEdit,
+    onPressMenu
+}: MomentCardProps) => {
+    const iconName = (item.icon || 'calendar') as keyof typeof Ionicons.glyphMap;
+
     return (
         <View style={[styles.card, { width, marginRight: spacingRight, height: CARD_HEIGHT }]}>
             {/* Top Row: Icon + Title */}
             <View style={styles.topRow}>
-                <Ionicons name={item.icon || 'calendar'} size={24} color={COLORS.textPrimary} />
+                <Ionicons name={iconName} size={24} color={COLORS.textPrimary} />
                 <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
             </View>
 

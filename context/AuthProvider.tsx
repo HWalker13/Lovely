@@ -1,7 +1,7 @@
 import { onAuthStateChanged, User } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getPartnerProfile } from "./lib/api";
-import { auth } from "./lib/auth";
+import { getPartnerProfile } from "@/lib/api";
+import { auth } from "@/lib/auth";
 
 type AppStatus =
   | "loading"

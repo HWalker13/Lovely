@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const ORANGE = '#ff8c00';
@@ -6,6 +7,9 @@ const BLACK = '#000';
 
 export default function DescribePartner() {
   const router = useRouter();
+  const [personality, setPersonality] = useState('');
+  const [favorites, setFavorites] = useState('');
+  const [feelings, setFeelings] = useState('');
 
   return (
     <View style={styles.container}>
@@ -16,6 +20,8 @@ export default function DescribePartner() {
         placeholderTextColor="#777"
         style={styles.input}
         multiline
+        value={personality}
+        onChangeText={setPersonality}
       />
 
       <TextInput
@@ -23,6 +29,8 @@ export default function DescribePartner() {
         placeholderTextColor="#777"
         style={styles.input}
         multiline
+        value={favorites}
+        onChangeText={setFavorites}
       />
 
       <TextInput
@@ -30,6 +38,8 @@ export default function DescribePartner() {
         placeholderTextColor="#777"
         style={styles.input}
         multiline
+        value={feelings}
+        onChangeText={setFeelings}
       />
 
       <TouchableOpacity

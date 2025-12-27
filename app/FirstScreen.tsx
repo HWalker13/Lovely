@@ -47,7 +47,7 @@ export default function FirstScreen() {
       };
       await putPartnerProfile(user, payload);
 
-      router.replace("Homescreen");
+      router.replace("HomeScreen");
     } catch (_err) {
     } finally {
       setLoading(false);

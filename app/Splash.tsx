@@ -1,4 +1,4 @@
-import { useAuth } from "@/AuthProvider";
+import { useAuth } from "@/context/AuthProvider";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet, View } from "react-native";
@@ -29,7 +29,7 @@ export default function Splash() {
 
       // 2. No next param? Follow normal logic
       if (status === "ready" || status === "needsOnboarding") {
-        router.replace("/(tabs)/Homescreen");
+        router.replace("/(tabs)/HomeScreen");
       } else {
         router.replace("/Onboarding");
       }
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
 });
-
 
 
 

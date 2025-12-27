@@ -1,8 +1,10 @@
+from typing import Any, Dict, Optional
+
 from app.repositories.firestore import get_db
 from app.models.partner_profile import PartnerProfileV1
 
 
-def get_partner_profile(uid: str):
+def get_partner_profile(uid: str) -> Optional[Dict[str, Any]]:
     db = get_db()
     doc_ref = db.collection("users").document(uid).collection("data").document("partner_profile")
     doc = doc_ref.get()
@@ -13,7 +15,7 @@ def get_partner_profile(uid: str):
     return doc.to_dict()
 
 
-def upsert_partner_profile(uid: str, profile: PartnerProfileV1):
+def upsert_partner_profile(uid: str, profile: PartnerProfileV1) -> None:
     db = get_db()
     doc_ref = db.collection("users").document(uid).collection("data").document("partner_profile")
 

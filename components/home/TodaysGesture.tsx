@@ -4,11 +4,22 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { TEXT_SIZE } from '../../constants/typography';
 
+type Gesture = {
+    id: string;
+    text: string;
+};
+
+type TodaysGestureProps = {
+    gesture: Gesture | null;
+    onPlanPress: () => void;
+    onMarkDone: () => void;
+};
+
 /**
  * Today's Gesture component
  * Displays the daily gesture suggestion with check button and plan button
  */
-const TodaysGesture = ({ gesture, onPlanPress, onMarkDone }) => {
+const TodaysGesture = ({ gesture, onPlanPress, onMarkDone }: TodaysGestureProps) => {
     const [isChecked, setIsChecked] = useState(false);
     const checkScale = new Animated.Value(1);
 
