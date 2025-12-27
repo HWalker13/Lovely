@@ -58,7 +58,6 @@ export default function Signup() {
       // Signup → Splash → DescribePartner (shown once after signup)
       router.replace("/?next=/DescribePartner");
     } catch (err: any) {
-      console.log("Signup error:", err);
       if (err.code === "auth/email-already-in-use") {
         setError("That email is already in use.");
       } else if (err.code === "auth/invalid-email") {

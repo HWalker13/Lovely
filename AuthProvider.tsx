@@ -32,8 +32,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (!mounted) return;
 
-      console.log("[AUTH] state changed:", firebaseUser?.uid ?? "NO USER");
-
       // 🔒 HARD GUARD — NO USER, NO BACKEND CALLS
       if (!firebaseUser) {
         setUser(null);
@@ -80,8 +78,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       unsub();
     };
   }, []);
-
-  console.log("AUTH PROVIDER:", { user, loading, status });
 
   return (
     <AuthContext.Provider value={{ user, loading, status }}>

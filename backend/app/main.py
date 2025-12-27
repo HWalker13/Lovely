@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from uuid import uuid4
 
 from app.firebase import init_firebase
@@ -18,6 +19,14 @@ from app.services.nudge_generator import generate_profile_nudges
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.on_event("startup")
@@ -40,10 +49,8 @@ def read_partner_profile(uid: str = Depends(get_current_user_uid)):
     profile = get_partner_profile(uid)
 
     if profile is None:
-        print(f"[PROFILE] uid={uid} → EXISTS: False")
         return {"exists": False, "profile": None}
 
-    print(f"[PROFILE] uid={uid} → EXISTS: True")
     return {"exists": True, "profile": profile}
 
 
@@ -122,6 +129,4 @@ def generate_nudges(uid: str = Depends(get_current_user_uid)):
         "created_count": len(created),
         "nudges": created,
     }
-
-
 

@@ -38,7 +38,6 @@ export default function Login() {
       // Login → Splash → Homescreen for returning users
       router.replace("/Splash?next=/(tabs)/Homescreen");
     } catch (err: any) {
-      console.log("Login error:", err);
       if (
         err.code === "auth/user-not-found" ||
         err.code === "auth/wrong-password"

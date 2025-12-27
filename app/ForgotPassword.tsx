@@ -34,7 +34,6 @@ export default function ForgotPassword() {
             await sendPasswordResetEmail(auth, email.trim());
             setSuccess('Password reset email sent. Check your inbox.');
         } catch (err: any) {
-            console.log('Reset error:', err);
             if (err.code === 'auth/user-not-found') {
                 setError('No account found with that email.');
             } else if (err.code === 'auth/invalid-email') {
@@ -137,4 +136,3 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
 });
-

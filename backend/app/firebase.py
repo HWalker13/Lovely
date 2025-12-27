@@ -20,6 +20,3 @@ def init_firebase():
 
     firebase_admin.initialize_app(cred)
 
-    print("[FIREBASE] Admin SDK initialized")
-
-

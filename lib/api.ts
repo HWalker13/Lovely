@@ -84,8 +84,6 @@ async function request<T>(
 
   const headers = await getAuthHeaders(user);
 
-  console.log("[API] Request:", method, url);
-
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     const controller = new AbortController();
     const timeout = setTimeout(
@@ -176,6 +174,5 @@ export function putPartnerProfile(
     body: JSON.stringify(profile),
   });
 }
-
 
 

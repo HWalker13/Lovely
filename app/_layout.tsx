@@ -12,7 +12,6 @@ export default function RootLayout() {
   useEffect(() => {
     const setupNotifications = async () => {
       const token = await registerForPushNotificationsAsync();
-      console.log("Expo push token:", token);
     };
 
     setupNotifications();

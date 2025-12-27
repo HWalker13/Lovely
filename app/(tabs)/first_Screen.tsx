@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 
+import { putPartnerProfile } from "@/lib/api";
 import { auth } from "@/lib/auth";
 
 const ORANGE = "#ff8c00";
@@ -26,13 +27,10 @@ export default function FirstScreen() {
       const user = auth.currentUser;
 
       if (!user) {
-        console.log("[ONBOARDING] No authenticated user");
         return;
       }
 
       setLoading(true);
-
-      const token = await user.getIdToken();
 
       const payload = {
         context: {
@@ -47,31 +45,10 @@ export default function FirstScreen() {
         ].filter(Boolean),
         notes: "onboarding complete",
       };
-
-      console.log("[ONBOARDING] PUT /partner-profile → sending");
-
-      const response = await fetch(
-        "http://192.168.1.89:8000/partner-profile",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(text);
-      }
-
-      console.log("[ONBOARDING] PUT /partner-profile → 200 OK");
+      await putPartnerProfile(user, payload);
 
       router.replace("Homescreen");
-    } catch (err) {
-      console.log("[ONBOARDING] Failed:", err);
+    } catch (_err) {
     } finally {
       setLoading(false);
     }
@@ -159,4 +136,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-

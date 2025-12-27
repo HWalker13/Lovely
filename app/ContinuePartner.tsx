@@ -10,7 +10,6 @@ export default function ContinuePartner() {
   const [description, setDescription] = useState('');
 
   const handleNext = () => {
-    console.log('User wrote:', description);
     router.push('/DescribeFirstDate');
   };
 

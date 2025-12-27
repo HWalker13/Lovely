@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { putPartnerProfile } from "@/lib/api";
 import { auth } from "@/lib/auth";
 import { signOut } from "firebase/auth";
 
@@ -21,8 +22,7 @@ export default function Profile() {
         try {
             await signOut(auth);
             router.replace("/Splash");
-        } catch (err) {
-            console.log("Logout error:", err);
+        } catch (_err) {
         }
     };
 
@@ -31,11 +31,8 @@ export default function Profile() {
             const user = auth.currentUser;
 
             if (!user) {
-                console.log("[PUT] No authenticated user");
                 return;
             }
-
-            const token = await user.getIdToken();
 
             const payload = {
                 context: {
@@ -55,26 +52,8 @@ export default function Profile() {
                 notes: "initial profile seed",
             };
 
-            const response = await fetch(
-                "http://192.168.1.89:8000/partner-profile",
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(payload),
-                }
-            );
-
-            if (!response.ok) {
-                const text = await response.text();
-                throw new Error(text);
-            }
-
-            console.log("[PUT] /partner-profile → 200 OK");
-        } catch (err) {
-            console.log("[PUT] Failed:", err);
+            await putPartnerProfile(user, payload);
+        } catch (_err) {
         }
     };
 
